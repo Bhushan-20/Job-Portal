@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {signup,login,sendotp,changePassword} = require("../controllers/Auth");
 const {getUserDetails,updateUserDetails,applyForJob,getApplicationsForJob,getAllApplications,updateApplicationStatus,getApplicantsList} = require("../controllers/User")
-
+const {resetPassword,resetPasswordToken} = require("../controllers/ResetPassword")
 const {auth, isApplicant, isRecruiter} = require("../middleware/authorization");
 
 // Routes for Login, Signup, and Authentication
@@ -36,6 +36,17 @@ router.get("/jobs/:id/applications",auth,isRecruiter,getApplicationsForJob);
 router.get("/applications",auth,getAllApplications);
 router.put("/updateapplication/:id",auth,updateApplicationStatus);
 router.get("/applicants",auth,isRecruiter,getApplicantsList);
+
+
+// ********************************************************************************************************
+//                                      Reset Password
+// ********************************************************************************************************
+
+// Route for generating a reset password token
+router.post("/reset-password-token", resetPasswordToken)
+
+// Route for resetting user's password after verification
+router.post("/reset-password", resetPassword)
 
 
 

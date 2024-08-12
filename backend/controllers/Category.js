@@ -41,7 +41,7 @@ exports.createCategory = async (req, res) => {
     }
 };
 
-exports.getAllCategories = async (req, res) => {
+exports.showAllCategories = async (req, res) => {
     try {
         // Fetch all categories from the database
         const categories = await JobCategory.find();

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { createCategory, getAllCategories } = require("../controllers/Category");
+const { createCategory, showAllCategories } = require("../controllers/Category");
 const { auth, isAdmin, isApplicant, isRecruiter } = require("../middleware/authorization");
 const { createJob, getAllJobs, findJob,updateJob,deleteJob} = require("../controllers/Job");
 
@@ -13,7 +13,7 @@ const { createJob, getAllJobs, findJob,updateJob,deleteJob} = require("../contro
 router.post("/createCategory", auth, isAdmin, createCategory);
 
 // Get All Categories - Public
-router.get("/showAllCategories", getAllCategories);
+router.get("/showAllCategories", showAllCategories);
 
 // ********************************************************************************************************
 //                                      Job Routes
