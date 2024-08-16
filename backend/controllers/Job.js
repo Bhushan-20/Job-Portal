@@ -86,6 +86,34 @@ exports.createJob = async (req, res) => {
     }
 };
 
+exports.getFullJobDetails = async(req,res) => {
+  try{
+    const { jobId } = req.body
+    const userId = req.user.id
+    const jobDetails = await Job.findOne({_id:jobId});
+    console.log("Job Detaiils",jobDetails);
+    if (!jobDetails) {
+      return res.status(400).json({
+        success: false,
+        message: `Could not find Job with id: ${jobId}`,
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        jobDetails,
+      },
+    })
+  }
+  catch(error){
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+  }
+}
+
 // Get All Jobs w.r.t recruiter
 exports.getAllJobs = async (req, res) => {
   try {
@@ -95,6 +123,7 @@ exports.getAllJobs = async (req, res) => {
       {
         title: true,
         description:true,
+        maxApplicants:true,
         maxPositions: true,
         dateOfPosting: true,
         salary: true,
@@ -160,7 +189,6 @@ exports.getAllJobsApplicant = async (req, res) => {
     });
   }
 };
-
 
 // Get Info about a particular job
 exports.findJob = async (req, res) => {
