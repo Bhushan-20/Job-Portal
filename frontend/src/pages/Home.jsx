@@ -132,7 +132,7 @@ const Home = () => {
 
           {/* Part - 3 */}
           <div className='flex flex-col items-center justify-center bg-gray-100 py-20 mt-[100px]'>
-              <p className='text-4xl text-center text-red-800 mb-8'>
+              <p className='text-4xl text-center text-yellow-50 mb-8'>
                   Post your job for millions of people to see
               </p>
               <CTAButton active={true} linkto={"/signup"} >

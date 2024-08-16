@@ -12,7 +12,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import ConfirmationModel from './ConfirmationModal'
 import { AiOutlineMenu} from "react-icons/ai";
 import { useDispatch } from "react-redux";
-import {categories} from "../../services/apis"
+import {allcategories} from "../../services/apis"
 import ProfileDropdown from '../core/Auth/ProfileDropDown';
 
 
@@ -39,9 +39,9 @@ const Navbar = () => {
     const fetchCategories = async () => {
         setLoading(true);
         try {
-            const result = await apiConnector("GET", categories.CATEGORIES_API);
+            const result = await apiConnector("GET", allcategories.CATEGORIES_API);
             console.log("Sublinks result->", result);
-            setSubLinks(result.data.data || []); // Fallback to empty array if data is not as expected
+            setSubLinks(result.data.categories || []); // Fallback to empty array if data is not as expected
             console.log("Updated subLinks:", result.data || []);
         } catch (error) {
             console.error("Could not fetch Categories.", error);

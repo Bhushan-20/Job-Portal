@@ -1,5 +1,12 @@
 import "./App.css";
 import {Route, Routes } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+
+import {ACCOUNT_TYPE} from "./utils/constants"
+import {setUserReal} from "./slices/userSlice"
+
 import Navbar from "./components/common/Navbar";
 import Home from "./pages/Home";
 import OpenRoute from "./components/core/Auth/OpenRoute";
@@ -9,8 +16,31 @@ import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import About from "./pages/About";
+import PrivateRoute from "./components/core/Auth/PrivateRoute";
+import Dashboard from "./pages/Dashboard";
+import MyProfile from "./components/core/Dashboard/MyProfile";
+import Settings from "./components/core/Dashboard/Settings/index";
+import MyJobs from "./components/core/Dashboard/MyJobs";
+import AllJobs from "./components/common/Jobs/AllJobs";
+import AddJobs from "./components/core/Dashboard/Recruiter/AddJob/AddJob";
+import EditJob from "./components/core/Dashboard/Recruiter/EditJob/EditJob";
 
 function App() {
+  const { token } = useSelector((state) => state.auth)
+  const [userData, setUserData] = useState(null) 
+  const dispatch = useDispatch();
+  useEffect(()=> {
+    const setData = async() => {
+      const decodedToken = await jwtDecode(token)
+      if(decodedToken !== userData){
+        setUserData(decodedToken)
+        dispatch(setUserReal(decodedToken))
+      }
+    }
+    if(token){
+      setData();
+    }
+  }, [token])
   return (
     <div className="w-screen min-h-screen bg-richblack-700 flex flex-col font-inter">
       <Navbar/>
@@ -57,6 +87,32 @@ function App() {
             </OpenRoute>
           }
         />
+        <Route path="/jobs" element={<AllJobs/>}/>
+         {/* Private Route - for Only Logged in User */}
+         <Route element={<PrivateRoute> <Dashboard/></PrivateRoute>}>
+             {/* Route for all users */}
+             <Route path="dashboard/my-profile" element={<MyProfile />} />
+             <Route path="dashboard/Settings" element={<Settings/>}/>
+             
+             
+
+             {/* ********************************************************************************************************
+                                                      ROUTES FOR Applicant
+            ******************************************************************************************************** */}
+            {/* ********************************************************************************************************
+                                                      ROUTES FOR Recruiter
+            ******************************************************************************************************** */}
+            {
+              userData?.accountType === ACCOUNT_TYPE.RECRUITER && (
+                <>
+                <Route path="dashboard/my-jobs" element={<MyJobs/>} />
+                <Route path="dashboard/add-job" element={<AddJobs/>} />
+                <Route path="/dashboard/edit-job/:jobId" element={<EditJob />} />
+                </>
+              )
+            }
+
+         </Route>
       </Routes>
 
     </div>
