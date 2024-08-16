@@ -5,6 +5,8 @@ const Recruiter = require("../models/Recruiter"); // Ensure the correct path
 const jobApplicant = require("../models/jobApplicant");
 const Application = require("../models/Application");
 const mongoose = require('mongoose');
+const {uploadFileToCloudinary}  = require("../utils/fileUploader")
+require("dotenv").config();
 
 exports.getUserDetails = async (req, res) => {
     try {
@@ -57,69 +59,100 @@ exports.updateUserDetails = async (req, res) => {
         const userId = req.user.id;
         const data = req.body;
 
+        const userDetail = await User.findById(userId);
+        if (!userDetail) {
+            return res.status(404).json({
+                success: false,
+                message: "User does not exist",
+            });
+        }
+
+        // Update common User details
+        if (data.firstName) userDetail.firstName = data.firstName;
+        if (data.lastName) userDetail.lastName = data.lastName;
+        if (data.email) useruserDetailRec.email = data.email;
+
+        await userDetail.save();
+        const updatedUserDetails = await User.findById(userId);
+
         if (user.accountType === "Recruiter") {
-            const userRec = await User.findById(userId);
             const recruiter = await Recruiter.findOne({ userId });
 
-            if (!recruiter || !userRec) {
+            if (!recruiter) {
                 return res.status(404).json({
                     success: false,
-                    message: "User does not exist",
+                    message: "Recruiter details not found",
                 });
             }
 
-            // Update User details
-            if (data.firstName) userRec.firstName = data.firstName;
-            if (data.lastName) userRec.lastName = data.lastName;
-            if (data.email) userRec.email = data.email;
-
-            // Update Recruiter details
+            // Update Recruiter-specific details
             if (data.contactNumber) recruiter.contactNumber = data.contactNumber;
             if (data.company) recruiter.company = data.company;
             if (data.position) recruiter.position = data.position;
-
-            await userRec.save();
             await recruiter.save();
+            const updatedRecruiter = await Recruiter.findOne({ userId }); 
 
             return res.status(200).json({
                 success: true,
+                updatedUserDetails,
+                updatedRecruiter,
                 message: "User details updated successfully",
             });
         } else if (user.accountType === "Applicant") {
-            const userAppli = await User.findById(userId);
             const applicant = await jobApplicant.findOne({ userId });
+            console.log("Applicant Id",applicant);
 
-            if (!applicant || !userAppli) {
+            if (!applicant) {
                 return res.status(404).json({
                     success: false,
-                    message: "User does not exist",
+                    message: "Applicant details not found",
                 });
             }
 
-            // Update User details
-            if (data.firstName) userAppli.firstName = data.firstName;
-            if (data.lastName) userAppli.lastName = data.lastName;
-            if (data.email) userAppli.email = data.email;
-
-            // Update Applicant details
+            // Update Applicant-specific details
             if (data.education) applicant.education = data.education;
             if (data.skills) applicant.skills = data.skills;
-            if (data.resume) applicant.resume = data.resume;
+            // Check if resume file is provided in the request
+           // Check if resume file is provided in the request
+           if (req.files && req.files.resume) {
+            const resumeFile = req.files.resume;
+        
+            // Ensure the file is either a PDF or Word document
+            const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!validTypes.includes(resumeFile.mimetype)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid file type. Only PDF and Word documents are allowed.",
+                });
+            }
+        
+            // Upload the resume to Cloudinary with the original file name
+            const uploadedResume = await uploadFileToCloudinary(resumeFile, process.env.FOLDER_NAME);
+        
+            // Save the resume URL to the applicant profile
+            applicant.resume = uploadedResume.secure_url;
+        }
+
             if (data.profile) applicant.profile = data.profile;
 
-            await userAppli.save();
             await applicant.save();
+
+            const updatedApplicant = await jobApplicant.findOne({ userId });
+
 
             return res.status(200).json({
                 success: true,
+                updatedUserDetails,
+                updatedApplicant,
                 message: "User details updated successfully",
             });
-        } else {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid user type",
-            });
-        }
+        } 
+        return res.status(200).json({
+            success: true,
+            updatedUserDetails,
+            message: "User details updated successfully",
+        });
+        
     } catch (error) {
         console.error(error);
         return res.status(500).json({
@@ -231,7 +264,7 @@ exports.applyForJob = async (req, res) => {
     }
 };
 
-//Recruiter -> Get Total Applications
+//Recruiter -> Get Total Applications for a particular job
 exports.getApplicationsForJob = async (req, res) => {
     try {
         const user = req.user;
@@ -293,6 +326,7 @@ exports.getApplicationsForJob = async (req, res) => {
     }
 };
 
+//Recruiter/Applicant -> Gets all applications
 exports.getAllApplications = async (req, res) => {
     try {
       const user = req.user;
@@ -558,6 +592,68 @@ exports.getApplicantsList = async (req, res) => {
 };
 
 
+exports.getApplicantDetails = async (req, res) => {
+    try {
+        const applicantId = req.user.id; // Assuming user information is stored in `req.user`
+  
+        // Find the applicant by their `userId` and populate necessary fields
+        const applicantDetails = await jobApplicant.findOne({ userId: applicantId })
+            .populate({
+                path: 'userId',
+                select: 'name email', // Select relevant fields from the User model
+            });
+  
+        if (!applicantDetails) {
+            return res.status(404).json({
+                success: false,
+                message: 'Applicant does not exist',
+            });
+        }
+  
+        res.status(200).json({
+            success: true,
+            message: 'Applicant data fetched successfully',
+            data: applicantDetails,
+        });
+  
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error fetching applicant details',
+            error: error.message,
+        });
+    }
+  };
+  
+  exports.getRecruiterDetails = async (req, res) => {
+    try {
+        const recruiterId = req.user.id; // Assuming user information is stored in `req.user`
+        
+        // Find the recruiter by the `userId` associated with the recruiter
+        const recruiterDetails = await Recruiter.findOne({ userId: recruiterId }).populate('jobs');
+  
+        if (!recruiterDetails) {
+            return res.status(404).json({
+                success: false,
+                message: 'Recruiter does not exist',
+            });
+        }
+  
+        res.status(200).json({
+            success: true,
+            message: 'Recruiter Data fetched successfully',
+            data: recruiterDetails,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error fetching recruiter details',
+            error: error.message,
+        });
+    }
+  };
 
 
 
