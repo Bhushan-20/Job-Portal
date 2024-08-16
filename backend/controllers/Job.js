@@ -3,6 +3,8 @@ const Category = require("../models/Category");
 const User = require("../models/User");
 const Recruiter = require("../models/Recruiter"); // Ensure the correct path
 const jobApplicant = require("../models/jobApplicant");
+const Jobs = require("../models/Jobs");
+const Application = require("../models/Application");
 
 // Create Job
 exports.createJob = async (req, res) => {
@@ -30,7 +32,7 @@ exports.createJob = async (req, res) => {
         }
 
         // Find the category by name
-        const category = await Category.findOne({ name: categoryName });
+        const category = await Category.findById(categoryName);
         if (!category) {
             return res.status(404).json({
                 success: false,
@@ -84,93 +86,81 @@ exports.createJob = async (req, res) => {
     }
 };
 
-//Get All Jobs
+// Get All Jobs w.r.t recruiter
 exports.getAllJobs = async (req, res) => {
   try {
-    const user = req.user;
-    let findParams = {};
-    let sortParams = {};
-
-    // Pagination parameters
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
-    // Filter by recruiter jobs
-    if (user.accountType === "Recruiter" && req.query.myjobs) {
-      findParams.userId = user._id;
-    }
-
-    // Search by title
-    if (req.query.q) {
-      findParams.title = { $regex: new RegExp(req.query.q, "i") };
-    }
-
-    // Filter by job type
-    if (req.query.jobType) {
-      let jobTypes = Array.isArray(req.query.jobType) ? req.query.jobType : [req.query.jobType];
-      findParams.jobType = { $in: jobTypes };
-    }
-
-    // Filter by salary range
-    if (req.query.salaryMin && req.query.salaryMax) {
-      findParams.salary = { $gte: parseInt(req.query.salaryMin), $lte: parseInt(req.query.salaryMax) };
-    } else if (req.query.salaryMin) {
-      findParams.salary = { $gte: parseInt(req.query.salaryMin) };
-    } else if (req.query.salaryMax) {
-      findParams.salary = { $lte: parseInt(req.query.salaryMax) };
-    }
-
-    // Filter by job duration
-    if (req.query.duration) {
-      findParams.duration = { $lt: parseInt(req.query.duration) };
-    }
-
-    // Sorting parameters
-    if (req.query.asc) {
-      let sortKeys = Array.isArray(req.query.asc) ? req.query.asc : [req.query.asc];
-      sortKeys.forEach(key => { sortParams[key] = 1; });
-    }
-
-    if (req.query.desc) {
-      let sortKeys = Array.isArray(req.query.desc) ? req.query.desc : [req.query.desc];
-      sortKeys.forEach(key => { sortParams[key] = -1; });
-    }
-
-    // Aggregation pipeline
-    let aggregationPipeline = [
+    const recruiterId = req.user.id; 
+    const allJobs = await Job.find(
+      { userId: recruiterId },
       {
-        $lookup: {
-          from: "recruiterinfos",
-          localField: "userId",
-          foreignField: "userId",
-          as: "Recruiter"
-        }
-      },
-      { $unwind: "$Recruiter" },
-      { $match: findParams },
-      { $skip: skip },
-      { $limit: limit }
-    ];
+        title: true,
+        description:true,
+        maxPositions: true,
+        dateOfPosting: true,
+        salary: true,
+        jobType: true,
+        deadline: true,
+        skillsets: true,
+        category:true,
+        location:true,
+        company:true
+      }
+    )
+    .populate("userId", "name") // Assuming you want to show the name of the user who posted the job
+    // .populate("category", "name") // Assuming the category has a name field
+    .exec();
 
-    if (Object.keys(sortParams).length > 0) {
-      aggregationPipeline.push({ $sort: sortParams });
-    }
-
-    const jobs = await Job.aggregate(aggregationPipeline);
-
-    // Respond with jobs
-    if (!jobs.length) {
-      return res.status(404).json({ message: "No jobs found" });
-    }
-
-    res.json(jobs);
-
+    return res.status(200).json({
+      success: true,
+      data: allJobs,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };
+
+//Get All jobs for applicant
+exports.getAllJobsApplicant = async (req, res) => {
+  try {
+    const allJobs = await Job.find(
+      {},
+      {
+        title: true,
+        description:true,
+        maxPositions: true,
+        dateOfPosting: true,
+        salary: true,
+        jobType: true,
+        deadline: true,
+        skillsets: true,
+        category:true,
+        location:true,
+        company:true
+      }
+    )
+    .populate("userId", "name") // Assuming you want to show the name of the user who posted the job
+    // .populate("category", "name") // Assuming the category has a name field
+    .exec();
+
+    return res.status(200).json({
+      success: true,
+      data: allJobs,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
 
 // Get Info about a particular job
 exports.findJob = async (req, res) => {
@@ -258,7 +248,7 @@ exports.updateJob = async (req, res) => {
   }
 };
 
-//Delete The Job
+// Delete the Job
 exports.deleteJob = async (req, res) => {
   try {
     const recruiterId = req.user.id;
@@ -315,5 +305,3 @@ exports.deleteJob = async (req, res) => {
     });
   }
 };
-
-
