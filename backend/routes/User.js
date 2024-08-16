@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {signup,login,sendotp,changePassword} = require("../controllers/Auth");
-const {getUserDetails,updateUserDetails,applyForJob,getApplicationsForJob,getAllApplications,updateApplicationStatus,getApplicantsList} = require("../controllers/User")
+const {getUserDetails,updateUserDetails,applyForJob,getApplicationsForJob,getAllApplications,updateApplicationStatus,getApplicantsList,getApplicantDetails,getRecruiterDetails} = require("../controllers/User")
 const {resetPassword,resetPasswordToken} = require("../controllers/ResetPassword")
 const {auth, isApplicant, isRecruiter} = require("../middleware/authorization");
 
@@ -36,6 +36,12 @@ router.get("/jobs/:id/applications",auth,isRecruiter,getApplicationsForJob);
 router.get("/applications",auth,getAllApplications);
 router.put("/updateapplication/:id",auth,updateApplicationStatus);
 router.get("/applicants",auth,isRecruiter,getApplicantsList);
+
+// ********************************************************************************************************
+//                                      Fetch Data routes
+// ********************************************************************************************************
+router.get("/applicantDetails",auth,getApplicantDetails);
+router.get("/recruiterDetails",auth,isRecruiter,getRecruiterDetails);
 
 
 // ********************************************************************************************************
