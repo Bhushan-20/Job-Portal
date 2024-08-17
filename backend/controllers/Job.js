@@ -8,83 +8,100 @@ const Application = require("../models/Application");
 
 // Create Job
 exports.createJob = async (req, res) => {
-    try {
-        const recruiterId = req.user.id;
+  try {
+      const recruiterId = req.user.id;
 
-        // Check if the user is a recruiter
-        const recruiter = await User.findById(recruiterId);
-        if (!recruiter || recruiter.accountType !== "Recruiter") {
-            return res.status(401).json({
-                success: false,
-                message: "You don't have permission to add a job"
-            });
-        }
+      // Check if the user is a recruiter
+      const recruiter = await User.findById(recruiterId);
+      if (!recruiter || recruiter.accountType !== "Recruiter") {
+          return res.status(401).json({
+              success: false,
+              message: "You don't have permission to add a job"
+          });
+      }
 
-        // Get data from request body
-        const { title, description, maxApplicants, maxPositions, dateOfPosting, deadline, skillsets, jobType, salary, categoryName } = req.body;
+      // Get data from request body
+      const { title, company, description, maxApplicants, maxPositions, dateOfPosting, deadline, skillsets, jobType, salary, categoryName, location } = req.body;
 
-        // Validate required fields
-        if (!title || !description || !maxApplicants || !maxPositions || !dateOfPosting || !deadline || !skillsets || !jobType || !salary || !categoryName) {
-            return res.status(400).json({
-                success: false,
-                message: "Please fill all the required fields"
-            });
-        }
+      // Log data for debugging
+      console.log({ title, company, description, maxApplicants, maxPositions, dateOfPosting, deadline, skillsets, jobType, salary, categoryName, location });
 
-        // Find the category by name
-        const category = await Category.findById(categoryName);
-        if (!category) {
-            return res.status(404).json({
-                success: false,
-                message: "Category not found"
-            });
-        }
+      // Validate required fields
+      if (!title || !company || !description || !maxApplicants || !maxPositions || !dateOfPosting || !deadline || !skillsets || !jobType || !salary || !categoryName || !location) {
+          return res.status(400).json({
+              success: false,
+              message: "Please fill all the required fields"
+          });
+      }
 
-        // Create the job
-        const newJob = await Job.create({
-            userId: recruiterId,
-            title,
-            description,
-            maxApplicants,
-            maxPositions,
-            dateOfPosting,
-            deadline,
-            skillsets,
-            jobType,
-            salary,
-            category: category._id
-        });
+      // Parse skillsets JSON string into an array
+      let skillsetsArray;
+      try {
+          skillsetsArray = JSON.parse(skillsets);
+      } catch (parseError) {
+          return res.status(400).json({
+              success: false,
+              message: "Invalid skillsets format"
+          });
+      }
 
-        // Add the new job to the recruiter's job list in the Recruiter model
-        await Recruiter.findOneAndUpdate(
-            { userId: recruiterId },
-            { $push: { jobs: newJob._id } },
-            { new: true }
-        );
+      // Find the category by ID
+      const category = await Category.findById(categoryName);
+      if (!category) {
+          return res.status(404).json({
+              success: false,
+              message: "Category not found"
+          });
+      }
 
-        // Add the new job to the category's job list
-        await Category.findByIdAndUpdate(
-            category._id,
-            { $push: { jobs: newJob._id } },
-            { new: true }
-        );
+      // Create the job
+      const newJob = await Job.create({
+          userId: recruiterId,
+          title,
+          description,
+          maxApplicants,
+          maxPositions,
+          dateOfPosting,
+          deadline,
+          skillsets: skillsetsArray, // Save skillsets as an array
+          jobType,
+          salary,
+          category: category._id,
+          location,
+          company,
+      });
 
-        // Respond with success
-        return res.status(201).json({
-            success: true,
-            message: "Job created successfully",
-            data: newJob
-        });
+      // Add the new job to the recruiter's job list in the Recruiter model
+      await Recruiter.findOneAndUpdate(
+          { userId: recruiterId },
+          { $push: { jobs: newJob._id } },
+          { new: true }
+      );
 
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: "Failed to create job",
-            error: error.message
-        });
-    }
+      // Add the new job to the category's job list
+      await Category.findByIdAndUpdate(
+          category._id,
+          { $push: { jobs: newJob._id } },
+          { new: true }
+      );
+
+      // Respond with success
+      return res.status(201).json({
+          success: true,
+          message: "Job created successfully",
+          data: newJob
+      });
+
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+          success: false,
+          message: "Failed to create job",
+          error: error.message
+      });
+  }
 };
+
 
 exports.getFullJobDetails = async(req,res) => {
   try{
@@ -162,6 +179,7 @@ exports.getAllJobsApplicant = async (req, res) => {
         title: true,
         description:true,
         maxPositions: true,
+        maxApplicants:true,
         dateOfPosting: true,
         salary: true,
         jobType: true,
