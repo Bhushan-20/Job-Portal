@@ -67,3 +67,40 @@ exports.showAllCategories = async (req, res) => {
         });
     }
 };
+
+exports.categoryPageDetails = async(req,res) => {
+    try{
+        const { CategoryId } = req.body;
+        const selectedCategory = await JobCategory.findById(CategoryId).populate("jobs").exec();
+    //validation
+    if (!selectedCategory) {
+        return res.status(404).json({
+            success: false,
+            message: "Data Not Found",
+        });
+    }
+
+    if (selectedCategory.jobs.length === 0) {
+		console.log("No Jobs for this selected category.")
+		return res.status(404).json({
+		  success: false,
+		  message: "No Jobs for this category.",
+		})
+	    }
+
+        //return response
+		  return res.status(200).json({
+            success: true,
+            selectedCategory
+        });
+
+    }
+    catch(error){
+        console.log(error);
+		  return res.status(500).json({
+			  success: false,
+			  message: error.message,
+		  });
+    }
+    
+}
