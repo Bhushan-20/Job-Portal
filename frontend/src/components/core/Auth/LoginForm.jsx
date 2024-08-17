@@ -85,8 +85,8 @@ const LoginForm = () => {
           </label>
           <button
             type="submit"
-            className="mt-6 rounded-[8px] bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] py-[8px] px-[12px] font-medium text-richblack-900"
-          >
+            className="mt-6 rounded-lg text-white bg-gradient-to-b from-blue-400 to-teal-300 py-2 px-4 font-medium text-gray-900 shadow-lg transition-transform transform hover:scale-105"
+            >
             Sign In
           </button>
         </form>

@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    recruiter: localStorage.getItem("recruiter") ? JSON.parse(localStorage.getItem("recruiter")) : null,
+    recruiter: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
+    recruiterReal: null,
+    loading: false,
 };
 
 const recruiterSlice = createSlice({
@@ -11,11 +13,18 @@ const recruiterSlice = createSlice({
         setRecruiter(state, action) {
             state.recruiter = action.payload;
         },
+        setRecruiterReal(state, action) {
+            state.recruiterReal = action.payload;
+        },
         setLoading(state, action) {
             state.loading = action.payload;
+        },
+        clearRecruiter(state) {
+            state.recruiter = null;
+            state.recruiterReal = null;
         },
     },
 });
 
-export const { setRecruiter, setLoading } = recruiterSlice.actions;
+export const { setRecruiter, setRecruiterReal, setLoading, clearRecruiter } = recruiterSlice.actions;
 export default recruiterSlice.reducer;
