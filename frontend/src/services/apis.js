@@ -23,8 +23,8 @@ export const jobEndpoints = {
   EDIT_JOB_API: BASE_URL + "/jobs/updateJob",
   CREATE_JOB_API: BASE_URL + "/jobs/createJob",
   DELETE_JOB_API: BASE_URL + "/jobs/deleteJob",
-  VIEW_APPLICATIONS_API: BASE_URL + "/job/:id/applications",
-  UPDATE_APPLICATION_STATUS_API: BASE_URL + "/job/updateapplication/:id",
+  VIEW_APPLICATIONS_API: BASE_URL + "/auth/jobs/applications",
+  //UPDATE_APPLICATION_STATUS_API: BASE_URL + "/job/updateapplication/:id",
   GET_ALL_JOBS_APPLI_API: BASE_URL + "/jobs/alljobs",
   GET_FULL_JOB_DETAILS_API:BASE_URL + "/jobs/getFullJobDetails",
   
@@ -43,6 +43,10 @@ export const settingsEndpoints = {
   UPLOAD_RESUME_API : BASE_URL + "/upload/uploadResume"
 }
 
+export const recruiterEndpoints = {
+  GET_APPLICATIONS_FOR_JOB: (jobId) => BASE_URL + `/auth/jobs/${jobId}/applications`,
+};
+
 // APPLICANTS & RECRUITER API
 export const applicantEndpoints = {
   RESUME_UPLOAD_API: BASE_URL + "/uploadResume",
@@ -50,5 +54,8 @@ export const applicantEndpoints = {
   GET_RECRUITER_DETAILS: BASE_URL + "/auth/recruiterDetails",
   APPLY_JOB_API:BASE_URL + "/jobs/apply",
   GET_APPLICATIONS:BASE_URL + "/auth/applications",
+  UPDATE_APPLICATION_STATUS_API : BASE_URL + "/auth/updateapplicationstatus"
 }
+
+
 
