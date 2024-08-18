@@ -32,9 +32,9 @@ router.post("/changepassword", auth, changePassword)
 router.get("/userDetails",auth,getUserDetails);
 router.post("/updateUserDetails",auth,updateUserDetails);
 router.post("/jobs/:id/application",auth,isApplicant,applyForJob);
-router.get("/jobs/:id/applications",auth,isRecruiter,getApplicationsForJob);
+router.get("/jobs/applications/:id",auth,isRecruiter,getApplicationsForJob);
 router.get("/applications",auth,getAllApplications);
-router.put("/updateapplication/:id",auth,updateApplicationStatus);
+router.put("/updateapplicationstatus/:id",auth,isRecruiter,updateApplicationStatus);
 router.get("/applicants",auth,isRecruiter,getApplicantsList);
 
 // ********************************************************************************************************

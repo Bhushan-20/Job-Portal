@@ -21,6 +21,7 @@
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
     "react-super-responsive-table": "^5.2.3",
+    "react-toastify": "^10.0.5",
     "react-type-animation": "^3.2.0",
     "reducers": "^3.0.0-alpha",
     "swiper": "^11.1.9",
