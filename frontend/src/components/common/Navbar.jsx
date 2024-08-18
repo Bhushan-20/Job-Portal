@@ -40,7 +40,7 @@ const Navbar = () => {
         setLoading(true);
         try {
             const result = await apiConnector("GET", allcategories.CATEGORIES_API);
-            console.log("Sublinks result->", result);
+            console.log("Result>>>>>>>>>>>>>>>>>>>>->", result);
             setSubLinks(result.data.categories || []); // Fallback to empty array if data is not as expected
             console.log("Updated subLinks:", result.data || []);
         } catch (error) {
