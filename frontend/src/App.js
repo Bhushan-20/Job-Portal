@@ -24,6 +24,10 @@ import MyJobs from "./components/core/Dashboard/MyJobs";
 import AllJobs from "./components/common/Jobs/AllJobs";
 import AddJobs from "./components/core/Dashboard/Recruiter/AddJob/AddJob";
 import EditJob from "./components/core/Dashboard/Recruiter/EditJob/EditJob";
+import MyApplications from "./components/core/Dashboard/Applicant/MyApplications";
+import Category from "./pages/Category";
+import Applications from "./components/core/Dashboard/Recruiter/Applications";
+import ViewApplication from "./components/core/Dashboard/Recruiter/Jobs/ViewApplication";
 
 function App() {
   const { token } = useSelector((state) => state.auth)
@@ -47,6 +51,7 @@ function App() {
       <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/about" element={<About/>}/>
+          <Route path="category/:categoryName" element={<Category/>} />
 
           {/* Open Route - for Only Non Logged in User */}
           <Route 
@@ -99,6 +104,14 @@ function App() {
              {/* ********************************************************************************************************
                                                       ROUTES FOR Applicant
             ******************************************************************************************************** */}
+
+            {
+              userData?.accountType === ACCOUNT_TYPE.APPLICANT && (
+                <>
+                <Route path="dashboard/my-applications" element={<MyApplications/>} />
+                </>
+              )
+            }
             {/* ********************************************************************************************************
                                                       ROUTES FOR Recruiter
             ******************************************************************************************************** */}
@@ -108,6 +121,8 @@ function App() {
                 <Route path="dashboard/my-jobs" element={<MyJobs/>} />
                 <Route path="dashboard/add-job" element={<AddJobs/>} />
                 <Route path="/dashboard/edit-job/:jobId" element={<EditJob />} />
+                <Route path="/dashboard/applications" element={<Applications />} />
+                <Route path="/dashboard/job/applications/:jobId" element={<ViewApplication />} />
                 </>
               )
             }
