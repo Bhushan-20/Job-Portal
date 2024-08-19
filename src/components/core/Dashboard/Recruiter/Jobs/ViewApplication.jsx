@@ -16,8 +16,6 @@ const ViewApplication = () => {
       try {
         setLoading(true);
         const result = await getApplicationsForJob(jobId, token);
-        console.log(result);
-        console.log("Title->>>>>>",result?.data?.jobDetails.title)
         setJobApplications(result);
       } catch (error) {
         console.error("Error fetching job applications:", error);
@@ -31,13 +29,10 @@ const ViewApplication = () => {
   }, [jobId, token]);
 
   const handleShortlist = async(applicationId,newStatus) => {
-    console.log("Token->>>>>>",token);
     const updateStatus = await updateApplicationStatus(applicationId,newStatus,token);
-    console.log("UpdatedStatus",updateStatus);
   };
 
   const handleReject = async(applicationId,newStatus) => {
-    console.log("Application Id->>>>>>>>>>",applicationId);
     const updateStatus = await updateApplicationStatus(applicationId,newStatus,token)
   };
 

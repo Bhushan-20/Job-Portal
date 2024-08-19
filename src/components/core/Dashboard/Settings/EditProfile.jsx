@@ -48,11 +48,10 @@ export default function EditProfile() {
 
     const submitProfileForm = async (data) => {
         try {
-            console.log("Job Applicant Details->",jobApplicant);
             dispatch(updateUserDetails(token, data));
             navigate("/dashboard/my-profile");
         } catch (error) {
-            console.log("ERROR MESSAGE - ", error.message);
+            console.error("ERROR MESSAGE - ", error.message);
         }
     }
 

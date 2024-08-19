@@ -13,7 +13,7 @@ const MyApplications = () => {
             const res = await getApplications(token);
             setMyApplications(res);
         } catch (err) {
-            console.log("Cannot fetch Applications", err);
+            console.error("Cannot fetch Applications", err);
         }
     }
 

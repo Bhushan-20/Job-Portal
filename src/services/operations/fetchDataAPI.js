@@ -45,7 +45,6 @@ export const getAllCategories = async()=> {
     let result = [];
   try {
     const response = await apiConnector("GET", CATEGORIES_API)
-    console.log("Response For Categories->",response);
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch Categories")
     }
@@ -60,9 +59,7 @@ export const categoryPageDetails = async(categoryId) => {
     const toastId = toast.loading("Loading...")
     let result = []
     try{
-        console.log("ID_>>>>>>",categoryId)
         const response = await apiConnector("POST",allcategories.CATEGORY_PAGE_DETAILS,{CategoryId: categoryId,})
-        console.log("Response Categories",response);
         if (!response?.data) {
             throw new Error("Could Not Fetch Catagory page data.")
           }

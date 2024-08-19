@@ -27,8 +27,6 @@ const Category = () => {
       // Assuming 'result.data.categories' is the correct path to the categories array
       const categories = result.data.categories;
         
-      console.log("Categories Fetched", categories);
-  
       // Filter the categories based on the name match
       const category = categories?.find((ct) => 
         ct.name.split(" ").join("-").toLowerCase() === categoryName.toLowerCase()
@@ -37,7 +35,6 @@ const Category = () => {
       // Extract the category_id if the category was found
       const category_id = category?._id;
   
-      console.log("Category ID", category_id);
   
       // Set the category_id or an empty string if no matching category is found
       setCategoryId(category_id);
@@ -52,11 +49,9 @@ const Category = () => {
     if (categoryId) {
       (async () => {
         try {
-            console.log("ID->>>>>",categoryId)
           const res = await categoryPageDetails(categoryId);
           
           setCategoryPageData(res);
-          console.log("Category Page->",categoryPageData)
         } catch (error) {
           console.error("Error fetching category page details:", error);
         }

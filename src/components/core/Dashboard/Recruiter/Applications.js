@@ -12,10 +12,9 @@ const Applications = () => {
     const getApplication = async () => {
         try {
             const res = await getApplications(token);
-            console.log("RES->",res);
             setMyApplications(res);
         } catch (err) {
-            console.log("Cannot fetch Applications", err);
+            console.error("Cannot fetch Applications", err);
         }
     };
 
@@ -24,13 +23,10 @@ const Applications = () => {
     }, []);
 
     const handleShortlist = async(applicationId,newStatus) => {
-        console.log("Token->>>>>>",token);
         const updateStatus = await updateApplicationStatus(applicationId,newStatus,token);
-        console.log("UpdatedStatus",updateStatus);
       };
 
       const handleReject = async(applicationId,newStatus) => {
-        console.log("Application Id->>>>>>>>>>",applicationId);
         const updateStatus = await updateApplicationStatus(applicationId,newStatus,token)
       };
 

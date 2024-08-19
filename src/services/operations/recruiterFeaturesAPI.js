@@ -20,11 +20,9 @@ export const getAllJobs = async (token) => {
     const toastId = toast.loading("Loading...");
     let result = [];
     try {
-        console.log("BEFORE API CALL", token);
         const response = await apiConnector("GET", GET_ALL_JOBS_API, null, {
             Authorization: `Bearer ${token}`,
         });
-        console.log("AFTER API CALL", token);
 
         if (!response?.data?.success) {
             throw new Error("Could Not Fetch Jobs");
@@ -41,11 +39,9 @@ export const getAllJobsApplicant = async (token) => {
     const toastId = toast.loading("Loading...");
     let result = [];
     try {
-        console.log("BEFORE API CALL", token);
         const response = await apiConnector("GET", GET_ALL_JOBS_APPLI_API, null, {
             Authorization: `Bearer ${token}`,
         });
-        console.log("AFTER API CALL", token);
 
         if (!response?.data?.success) {
             throw new Error("Could Not Fetch Jobs");
@@ -62,7 +58,6 @@ export const deleteJob = async (jobId, token) => {
     const toastId = toast.loading("Loading...");
     try {
         // Ensure the jobId is passed correctly to the endpoint
-        console.log("JOB ID->",jobId);
         const response = await apiConnector("DELETE", `${DELETE_JOB_API}/${jobId}`, null, {
             Authorization: `Bearer ${token}`,
         });
@@ -119,13 +114,10 @@ export const createJob = async(jobData,token) => {
     let result = null
     const toastId = toast.loading("Loading...")
     try{
-        console.log("I came here")
         const response = await apiConnector("POST", CREATE_JOB_API, jobData, {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
         })
-        console.log("RESPONSE",response);
-        console.log("Done and Dusted")
         if (!response?.data?.success) {
             throw new Error("Failed To create Job")
           }
@@ -169,7 +161,6 @@ export const updateApplicationStatus = async (applicationId, newStatus, token) =
         { Authorization: `Bearer ${token}` }
       );
 
-      console.log("Response Status->>>>>>>>>>",response);
   
       if (response && response.data) {
         toast.success(`Application status updated to ${newStatus}`);

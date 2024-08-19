@@ -37,7 +37,6 @@ export const applyJob = async (jobId, sop, token) => {
                 Authorization: `Bearer ${token}`,
             }
         );
-        console.log("RESPONSE",response)
         if (!response?.data) {
             throw new Error("Job application failed");
         }
@@ -55,7 +54,6 @@ export const getApplications = async (token) => {
     let result = []
     try{
         const response = await apiConnector("GET", GET_APPLICATIONS, null, {Authorization : `Bearer ${token}`})
-        console.log("Response->>>>>>>>>>>>",response.data);
         if (!response.data) {
           throw new Error(response.data.message)
         }

@@ -13,7 +13,6 @@ const MyJobs = () => {
 
     useEffect(()=>{
         const fetchJobs = async() => {
-          console.log("Jobs",job);
             const result = await getAllJobs(token);
             if(result){
                 setJob(result);

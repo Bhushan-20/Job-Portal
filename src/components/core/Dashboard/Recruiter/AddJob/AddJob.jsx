@@ -27,7 +27,6 @@ const AddJobs = () => {
             setLoading(true);
             try {
                 const response = await apiConnector("GET", allcategories.CATEGORIES_API);
-                console.log("Response->",response);
                 setCategories(response.data.categories);
             } catch (error) {
                 console.error('Failed to fetch categories:', error);
