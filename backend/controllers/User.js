@@ -7,6 +7,8 @@ const Application = require("../models/Application");
 const mongoose = require("mongoose");
 const ObjectId = require("mongoose").Types.ObjectId;
 const { uploadFileToCloudinary } = require("../utils/fileUploader");
+const nodemailer = require('nodemailer');
+
 require("dotenv").config();
 
 exports.getUserDetails = async (req, res) => {
@@ -516,6 +518,7 @@ exports.updateApplicationStatus = async (req, res) => {
   try {
     const user = req.user;
     const userId = req.user.id;
+    const userDetails = await User.findById(userId);
     const applicationId = req.params.id;
     const newStatus = req.body.status;
     const recuterDetails = await Recruiter.findOne({
@@ -579,7 +582,31 @@ exports.updateApplicationStatus = async (req, res) => {
         });
 
         return res.json({ message: `Application ${newStatus} successfully` });
-      } else {
+      } else if (newStatus === "shortlisted") {
+        // Update the application status to "shortlisted"
+        application.status = "shortlisted";
+        await application.save();
+
+        // Send email to the applicant
+        const applicant = await User.findById(application.userId);
+        if (applicant) {
+          await sendShortlistedEmail(applicant.email, userDetails.firstName, job.title);
+        }
+
+        return res.json({ message: "Application shortlisted successfully" });
+      }else if (newStatus === "rejected") {
+        // Update the application status to "shortlisted"
+        application.status = "rejected";
+        await application.save();
+
+        // Send email to the applicant
+        const applicant = await User.findById(application.userId);
+        if (applicant) {
+          await sendRejectedEmail(applicant.email, userDetails.firstName, job.title);
+        }
+
+        return res.json({ message: "Application shortlisted successfully" });
+      }  else {
         const updatedApplication = await Application.findOneAndUpdate(
           {
             _id: applicationId,
@@ -783,26 +810,46 @@ exports.getRecruiterDetails = async (req, res) => {
   }
 };
 
-// exports.getMyApplications = async(req,res) => {
-//     try{
-//         const userId = req.user.id;
-//         let userDetails = await Application.find({userId});
-//         if (!userDetails) {
-//             return res.status(400).json({
-//               success: false,
-//               message: `Could not find user with id: ${userDetails}`,
-//             })
-//         }
-//         userDetails = userDetails.toObject()
-//         return res.status(200).json({
-//             success: true,
-//             data: userDetails,
-//           })
-//     }
-//     catch(error){
-//         return res.status(500).json({
-//             success: false,
-//             message: error.message,
-//           })
-//     }
-// }
+
+// Setup Nodemailer transport
+const transporter = nodemailer.createTransport({
+
+    host:process.env.MAIL_HOST,
+                auth:{
+                    user: process.env.MAIL_USER,
+                    pass: process.env.MAIL_PASS,
+                },
+});
+
+// Function to send email
+const sendShortlistedEmail = async (applicantEmail, applicantName, jobTitle) => {
+  const mailOptions = {
+    from: '"Jobify" <your-email@example.com>', // sender address
+    to: applicantEmail, // list of receivers
+    subject: `You've been shortlisted for the job: ${jobTitle}`, // Subject line
+    text: `Hi ${applicantName},\n\nCongratulations! You've been shortlisted for the position of ${jobTitle}. We will contact you with further details.\n\nBest regards,\nJobify Team`, // plain text body
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Shortlisted email sent to:', applicantEmail);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+  }
+};
+
+const sendRejectedEmail = async (applicantEmail, applicantName, jobTitle) => {
+  const mailOptions = {
+    from: '"Jobify" <your-email@example.com>', // sender address
+    to: applicantEmail, // list of receivers
+    subject: `Application Status: Rejected for the job ${jobTitle}`, // Subject line
+    text: `Hi ${applicantName},\n\nWe regret to inform you that your application for the position of ${jobTitle} has been rejected. Thank you for applying, and we wish you the best of luck in your future endeavors.\n\nBest regards,\nJobify Team`, // plain text body
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Rejected email sent to:', applicantEmail);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+  }
+};
