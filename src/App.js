@@ -28,6 +28,7 @@ import MyApplications from "./components/core/Dashboard/Applicant/MyApplications
 import Category from "./pages/Category";
 import Applications from "./components/core/Dashboard/Recruiter/Applications";
 import ViewApplication from "./components/core/Dashboard/Recruiter/Jobs/ViewApplication";
+import Error from "./pages/Error";
 
 function App() {
   const { token } = useSelector((state) => state.auth)
@@ -128,6 +129,10 @@ function App() {
             }
 
          </Route>
+         <Route
+          path="*"
+          element={<Error />}
+        />
       </Routes>
 
     </div>

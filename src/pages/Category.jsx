@@ -77,8 +77,8 @@ const Category = () => {
     <div>
       <div className="box-content bg-richblack-800 px-4">
         <div className="mx-auto flex min-h-[260px] max-w-maxContentTab flex-col justify-center gap-4 lg:max-w-maxContent">
-          <p className="text-3xl text-white">Category Details</p>
-          <p className="text-4xl text-richblack-5">
+          {/* //<p className="text-5xl text-yellow-400">Category</p> */}
+          <p className="text-5xl text-yellow-200">
             {categoryPageData?.name || "Loading..."}
           </p>
           <p className="text-2xl text-richblack-5">
