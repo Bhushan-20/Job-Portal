@@ -18,7 +18,7 @@ const JobsTable = ({ job, setJob }) => {
     const handleJobDelete = async (jobId) => {
         setLoading(true);
         try {
-            await deleteJob(jobId, token); 
+            await deleteJob(jobId, token);
             const result = await getAllJobs(token);
             if (result) {
                 setJob(result);
@@ -48,10 +48,10 @@ const JobsTable = ({ job, setJob }) => {
                 job.map((job) => (
                     <div
                         key={job._id}
-                        className="flex justify-between items-center bg-richblack-800 shadow-lg rounded-lg p-6 mb-6 max-w-4xl mx-auto text-richblack-100 border-l-4 border-yellow-400"
+                        className="flex flex-col md:flex-row justify-between items-start md:items-center bg-richblack-800 shadow-lg rounded-lg p-6 mb-6 max-w-4xl mx-auto text-richblack-100 border-l-4 border-yellow-400"
                     >
                         {/* Job Information */}
-                        <div className="flex-1">
+                        <div className="flex-1 mb-6 md:mb-0">
                             <h2 className="text-3xl font-extrabold mb-2 text-yellow-400">{job.title}</h2>
                             <p className="text-lg font-semibold flex items-center gap-2">
                                 <FaBuilding className="text-yellow-300" /> {job.company}
@@ -93,16 +93,16 @@ const JobsTable = ({ job, setJob }) => {
                         </div>
 
                         {/* Actions Section */}
-                        <div className="flex flex-col items-end gap-4">
+                        <div className="flex flex-col md:flex-row md:items-end gap-4 md:ml-6">
                             <button
                                 onClick={() => handleViewApplications(job._id)}
-                                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-md shadow-lg transition duration-300"
+                                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-md shadow-lg transition duration-300 w-full md:w-auto"
                             >
                                 View Applications
                             </button>
                             <button
                                 onClick={() => navigate(`/dashboard/edit-job/${job._id}`)}
-                                className="flex items-center gap-2 bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-md shadow-lg transition duration-300"
+                                className="flex items-center gap-2 bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-md shadow-lg transition duration-300 w-full md:w-auto"
                             >
                                 <FiEdit2 size={20} />
                                 Edit
@@ -119,7 +119,7 @@ const JobsTable = ({ job, setJob }) => {
                                         btn2Handler: !loading ? () => setConfirmationModal(null) : () => {},
                                     });
                                 }}
-                                className="flex items-center gap-2 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-lg transition duration-300"
+                                className="flex items-center gap-2 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-lg transition duration-300 w-full md:w-auto"
                             >
                                 <RiDeleteBin6Line size={20} />
                                 Delete
