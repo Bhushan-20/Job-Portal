@@ -81,7 +81,6 @@ exports.categoryPageDetails = async(req,res) => {
     }
 
     if (selectedCategory.jobs.length === 0) {
-		console.log("No Jobs for this selected category.")
 		return res.status(404).json({
 		  success: false,
 		  message: "No Jobs for this category.",
@@ -96,7 +95,7 @@ exports.categoryPageDetails = async(req,res) => {
 
     }
     catch(error){
-        console.log(error);
+        console.error(error);
 		  return res.status(500).json({
 			  success: false,
 			  message: error.message,

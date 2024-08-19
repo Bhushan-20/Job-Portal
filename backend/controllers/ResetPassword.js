@@ -23,7 +23,6 @@ exports.resetPasswordToken = async (req, res) => {
 			},
 			{ new: true }
 		);
-		console.log("DETAILS", updatedDetails);
 
 		const url = `https://jobify-bhushan.vercel.app/update-password/${token}`;
 

@@ -23,9 +23,6 @@ exports.createJob = async (req, res) => {
       // Get data from request body
       const { title, company, description, maxApplicants, maxPositions, dateOfPosting, deadline, skillsets, jobType, salary, categoryName, location } = req.body;
 
-      // Log data for debugging
-      console.log({ title, company, description, maxApplicants, maxPositions, dateOfPosting, deadline, skillsets, jobType, salary, categoryName, location });
-
       // Validate required fields
       if (!title || !company || !description || !maxApplicants || !maxPositions || !dateOfPosting || !deadline || !skillsets || !jobType || !salary || !categoryName || !location) {
           return res.status(400).json({
@@ -108,7 +105,6 @@ exports.getFullJobDetails = async(req,res) => {
     const { jobId } = req.body
     const userId = req.user.id
     const jobDetails = await Job.findOne({_id:jobId});
-    console.log("Job Detaiils",jobDetails);
     if (!jobDetails) {
       return res.status(400).json({
         success: false,
@@ -323,14 +319,12 @@ exports.deleteJob = async (req, res) => {
       { jobs: jobId },
       { $pull: { jobs: jobId } }
     );
-    console.log("Category update result:", categoryUpdateResult);
 
     // Update Recruiter collection
     const recruiterUpdateResult = await Recruiter.updateOne(
       { userId: recruiterId },
       { $pull: { jobs: jobId } }
     );
-    console.log("Recruiter update result:", recruiterUpdateResult);
 
     // Check if the recruiter was updated successfully
     if (recruiterUpdateResult.modifiedCount === 0) {

@@ -10,11 +10,10 @@ const {uploadFileToCloudinary}  = require("../utils/fileUploader")
 exports.localFileUpload = async(req,res) => {
     try{
         const file = req.files.file;
-        //console.log("File",file); 
         let path = __dirname + "/resumefiles/" + Date.now() + `.${file.name.split('.')[1]}`;
 
         file.mv(path,(err)=>{
-            console.log(err);
+            console.error(err);
         });
 
         res.json({
@@ -23,7 +22,7 @@ exports.localFileUpload = async(req,res) => {
         })
     }
     catch(error){
-        console.log(error);
+        console.error(error);
     }
 }
 

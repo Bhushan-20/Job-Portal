@@ -76,7 +76,6 @@ exports.updateUserDetails = async (req, res) => {
     if (data.email) userDetail.email = data.email;
 
     await userDetail.save();
-    console.log("Updated User Data", userDetail);
     const updatedUserDetails = await User.findById(userId);
 
     if (user.accountType === "Recruiter") {
@@ -94,7 +93,6 @@ exports.updateUserDetails = async (req, res) => {
       if (data.company) recruiter.company = data.company;
       if (data.position) recruiter.position = data.position;
       await recruiter.save();
-      console.log("Updated Recruiter Data", recruiter);
       const updatedRecruiter = await Recruiter.findOne({ userId });
 
       return res.status(200).json({
@@ -105,7 +103,6 @@ exports.updateUserDetails = async (req, res) => {
       });
     } else if (user.accountType === "Applicant") {
       const applicant = await jobApplicant.findOne({ userId });
-      console.log("Applicant Id", applicant);
 
       if (!applicant) {
         return res.status(404).json({
@@ -832,7 +829,6 @@ const sendShortlistedEmail = async (applicantEmail, applicantName, jobTitle) => 
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Shortlisted email sent to:', applicantEmail);
   } catch (error) {
     console.error('Failed to send email:', error);
   }
@@ -848,7 +844,6 @@ const sendRejectedEmail = async (applicantEmail, applicantName, jobTitle) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Rejected email sent to:', applicantEmail);
   } catch (error) {
     console.error('Failed to send email:', error);
   }
