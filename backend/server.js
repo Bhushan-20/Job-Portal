@@ -4,9 +4,13 @@ const app = express();
 const dotenv = require("dotenv")
 const cookieParser = require("cookie-parser");
 const cors  = require("cors");
+const fileUpload = require("express-fileupload");
+const path = require('path');
+const fs = require('fs');
+
 const PORT = process.env.PORT || 4000;
 const {cloudinaryConnect} = require("./config/cloudinary");
-const fileUpload = require("express-fileupload");
+
 
 
 //Routes
@@ -21,12 +25,15 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors())
 
-app.use(
-    fileUpload({
-        useTempFiles:true,
-        tempFileDir:"/temp"
-    })
-)
+const tempDir = path.join(__dirname, 'uploads/temp');
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir, { recursive: true });
+}
+
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: tempDir, // Custom temp directory
+}));
 
 //Database Connection
 const db = require("./config/database");
