@@ -14,6 +14,7 @@ import { AiOutlineMenu} from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import {allcategories} from "../../services/apis"
 import ProfileDropdown from '../core/Auth/ProfileDropDown';
+import TransButton from '../core/HomePage/TranspButton';
 
 
 const Navbar = () => {
@@ -54,7 +55,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className='flex h-14 items-center justify-center border-b-[1px] border-b-richblack-400 bg-richblack-100 transition-all duration-200'>
+        <div className='flex h-14 items-center justify-center border-b-richblack-400 bg-richblack-700 transition-all duration-200 mt-2'>
             <div className='flex w-11/12 max-w-maxContent items-center justify-between'>
                 {/* Logo */}
                 <Link to="/">
@@ -63,13 +64,13 @@ const Navbar = () => {
 
                 {/* Nav Links */}
                 <nav className='hidden md:block'>
-                    <ul className='flex gap-x-6 text-richblack-800'>
+                    <ul className='flex gap-x-6 text-white'>
                         {NavbarLinks.map((link, index) => (
                             <li key={index}>
                                 {link.title === "Category" ? (
                                     <div
                                         className={`group relative flex cursor-pointer items-center gap-1 ${
-                                            matchRoute("/category/:categoryName") ? "text-yellow-25" : "text-richblack-800"
+                                            matchRoute("/category/:categoryName") ? "text-yellow-25" : "text-white"
                                         }`}
                                     >
                                         <p>{link.title}</p>
@@ -96,7 +97,7 @@ const Navbar = () => {
                                 ) : (
                                     <Link to={link?.path}>
                                         <p className={`${
-                                            matchRoute(link?.path) ? "text-yellow-25" : "text-richblack-800"
+                                            matchRoute(link?.path) ? "text-yellow-25" : "text-white"
                                         }`}>
                                             {link.title}
                                         </p>
@@ -108,22 +109,21 @@ const Navbar = () => {
                 </nav>
 
                 {/* Login/SignUp/Dashboard */}
-                <div className='hidden items-center gap-x-4 md:flex'>
+                <div className='hidden items-center gap-x-4 md:flex text-richblack-100'>
                     {
                         token === null && (
-                        <Link to="/login">
-                            <button className="rounded-md border border-richblack-700 bg-richblack-800 px-[20px] py-[9px] text-richblack-100">
+							<TransButton active={true} linkto={"/login"} className="px-[20px] py-[9px]" >
                                 Log in
-                            </button>
-                        </Link>)
+                            </TransButton>
+
+                       )
                     }
                     {    
                         token === null && (
-                            <Link to="/signup">
-                                    <button className="border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md">
+                            <TransButton active={true} linkto={"/signup"} className="px-[12px] py-[8px] ">
                                         Sign up
-                                    </button>
-                            </Link>
+                                    
+                            </TransButton>
                         )
                     }
                     {
