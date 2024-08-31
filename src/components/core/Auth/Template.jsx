@@ -33,7 +33,7 @@ function Template({ title, description1, description2, image, formType }) {
               width={608}
               height={504}
               loading="lazy"
-              className="absolute top-10 right-4 z-10 image-animate"
+              className="absolute top-10 right-4 z-10 image-animate md:block hidden"
             />
           </div>
         </div>

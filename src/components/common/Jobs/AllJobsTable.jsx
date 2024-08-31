@@ -14,6 +14,7 @@ const JobsTable = ({ jobs, setJobs }) => {
 
     const [loading, setLoading] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState(null);
+    const [showMoreInfo, setShowMoreInfo] = useState({}); // Track the visibility of more info for each job
 
     const handleApply = async (jobId) => {
         const sop = "This is my statement of purpose"; // Replace with actual SOP
@@ -22,6 +23,13 @@ const JobsTable = ({ jobs, setJobs }) => {
         } catch (error) {
             console.error("Failed to apply for job:", error);
         }
+    };
+
+    const toggleMoreInfo = (jobId) => {
+        setShowMoreInfo((prevState) => ({
+            ...prevState,
+            [jobId]: !prevState[jobId],
+        }));
     };
 
     return (
@@ -43,8 +51,8 @@ const JobsTable = ({ jobs, setJobs }) => {
                         </Tr>
                     ) : (
                         jobs.map((job) => (
-                            <Tr key={job._id} className="border-b border-richblack-800">
-                                <Td className="flex gap-x-10 p-6">
+                            <Tr key={job._id} className="border-b border-richblack-800 ">
+                                <Td className="flex sm:flex-col md:flex-row gap-4 p-6 sm:items-center justify-center sm:justify-center">
                                     {/* Left side - Job card */}
                                     <div className="flex-1 bg-richblack-800 shadow-lg rounded-lg p-6 text-richblack-100 max-w-sm">
                                         <h2 className="text-2xl font-bold mb-2">
@@ -73,8 +81,8 @@ const JobsTable = ({ jobs, setJobs }) => {
                                         </div>
                                     </div>
 
-                                    {/* Right side - Other details */}
-                                    <div className="flex-1 bg-richblack-700 shadow-lg rounded-lg p-6 text-richblack-100">
+                                    {/* Right side - Other details (hidden on small screens) */}
+                                    <div className={`flex-1 bg-richblack-700 shadow-lg rounded-lg p-6 text-richblack-100 ${showMoreInfo[job._id] ? 'block' : 'hidden'} md:block`}>
                                         <p className="mb-2">Salary: &#8377; {job.salary} per month</p>
                                         <p className="mb-2">Date Of Posting: {new Date(job.dateOfPosting).toLocaleDateString()}</p>
                                         <p className="mb-2">Number of Applicants: {job.maxApplicants}</p>
@@ -82,6 +90,14 @@ const JobsTable = ({ jobs, setJobs }) => {
                                         <p className="mb-4">Description: {job.description}</p>
                                         <p className="mb-2">Location: {job.location}</p>
                                     </div>
+
+                                    {/* Toggle button for small devices */}
+                                    <button
+                                        onClick={() => toggleMoreInfo(job._id)}
+                                        className="mt-4 bg-richblack-700 justify-end text-richblack-300 rounded-lg py-2  px-4 md:hidden w-[140px]"
+                                    >
+                                        {showMoreInfo[job._id] ? 'Hide Info' : 'More Info'}
+                                    </button>
                                 </Td>
                             </Tr>
                         ))
