@@ -32,6 +32,10 @@ const JobsTable = ({ jobs, setJobs }) => {
         }));
     };
 
+    const hasDeadlinePassed = (deadline) => {
+        return new Date(deadline) < new Date();
+    };
+
     return (
         <>
             <Table className="rounded-xl border border-richblack-800">
@@ -59,9 +63,7 @@ const JobsTable = ({ jobs, setJobs }) => {
                                             Role: <span className="text-xl">{job.title}</span>
                                         </h2>
                                         <p className="mb-2">Company: {job.company}</p>
-                                        <p className="mb-2">
-                                            Last Date to Apply: {new Date(job.deadline).toLocaleDateString()}
-                                        </p>
+                                        
                                         <p className="mb-2">
                                             Skills: {job.skillsets.map((skill) => (
                                                 <span key={skill} className="inline-block bg-richblack-700 text-richblack-300 text-sm px-2 py-1 mr-2 rounded-lg">
@@ -69,8 +71,15 @@ const JobsTable = ({ jobs, setJobs }) => {
                                                 </span>
                                             ))}
                                         </p>
+                                        <p className="mb-2" style={{ color: hasDeadlinePassed(job.deadline) ? 'red' : 'inherit' }}>
+                                            {hasDeadlinePassed(job.deadline) ? (
+                                                "No longer accepting applications"
+                                            ) : (
+                                                `Last Date to Apply: ${new Date(job.deadline).toLocaleDateString()}`
+                                            )}
+                                        </p>
                                         <div className="mt-4 flex justify-end">
-                                            {user?.accountType === "Applicant" && (
+                                            {user?.accountType === "Applicant" && !hasDeadlinePassed(job.deadline) && (
                                                 <button
                                                     onClick={() => handleApply(job._id)}
                                                     className="bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer rounded-md py-2 px-6 font-semibold text-richblack-900"
