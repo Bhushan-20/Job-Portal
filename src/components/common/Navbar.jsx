@@ -1,27 +1,25 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from "../../assets/Logo/Logo_jobify.svg.png";
-import { Link, matchPath, useLocation,useNavigate } from 'react-router-dom';
+import { Link, matchPath, useLocation, useNavigate } from 'react-router-dom';
 import { NavbarLinks } from "../../data/navbar-links";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { BsChevronDown } from "react-icons/bs";
 import { logout } from "../../services/operations/authAPI";
-import {apiConnector} from "../../services/apiconnecter"
-import {TokenMobNavbarLinks} from '../../data/TokenMobNavbarLinks'
-import {MobNavbarLinks} from '../../data/mobnavlinks'
+import { apiConnector } from "../../services/apiconnecter";
+import { TokenMobNavbarLinks } from '../../data/TokenMobNavbarLinks';
+import { MobNavbarLinks } from '../../data/mobnavlinks';
 import { IoCloseSharp } from "react-icons/io5";
-import ConfirmationModel from './ConfirmationModal'
-import { AiOutlineMenu} from "react-icons/ai";
-import { useDispatch } from "react-redux";
-import {allcategories} from "../../services/apis"
+import ConfirmationModal from './ConfirmationModal';
+import { AiOutlineMenu } from "react-icons/ai";
+import { allcategories } from "../../services/apis";
 import ProfileDropdown from '../core/Auth/ProfileDropDown';
 import TransButton from '../core/HomePage/TranspButton';
-
 
 const Navbar = () => {
     const { token } = useSelector((state) => state.auth);
     const [toggle, setToggle] = useState(false);
     const [toggleSub, setToggleSub] = useState(false);
-    const [confirmationModel, setConfirmationModel] = useState(null);
+    const [confirmationModal, setConfirmationModal] = useState(null);
     const location = useLocation();
     const [subLinks, setSubLinks] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -30,21 +28,21 @@ const Navbar = () => {
 
     const bbtn1Hnad = () => {
 		dispatch(logout(navigate));
-		setConfirmationModel(null);
+		setConfirmationModal(null);
 	};
 
     useEffect(() => {
-        fetchCategories(); // Call fetchCategories to load data on component mount
+        fetchCategories();
     }, []);
     
     const fetchCategories = async () => {
         setLoading(true);
         try {
             const result = await apiConnector("GET", allcategories.CATEGORIES_API);
-            setSubLinks(result.data.categories || []); // Fallback to empty array if data is not as expected
+            setSubLinks(result.data.categories || []);
         } catch (error) {
             console.error("Could not fetch Categories.", error);
-            setSubLinks([]); // Ensure subLinks is an array even on error
+            setSubLinks([]);
         } finally {
             setLoading(false);
         }
@@ -55,7 +53,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className='flex h-14 items-center justify-center border-b-richblack-400  transition-all duration-200 mt-2'>
+        <div className='flex h-14 items-center justify-center border-b-richblack-400 transition-all duration-200 mt-2'>
             <div className='flex w-11/12 max-w-maxContent items-center justify-between'>
                 {/* Logo */}
                 <Link to="/">
@@ -131,6 +129,7 @@ const Navbar = () => {
                     }
                 </div>
 
+                {/* Mobile Navbar */}
                 <div
 					className="md:hidden flex flex-1 justify-end items-center text-white"
 					onClick={() => setToggle(!toggle)}>
@@ -144,8 +143,8 @@ const Navbar = () => {
 					<div
 						className={`${
 							!toggle ? "hidden" : "flex"
-						} p-6 black-gradient absolute bg-[rgb(5,8,22)] top-[35px] right-0 mx-4 my-2 min-w-[140px] z-50 rounded-xl`}>
-						<ul className="list-none flex justify-end items-start flex-col gap-4">
+						} p-6 absolute bg-richblack-900 top-[35px] right-0 mx-4 my-2 min-w-[140px] z-50 rounded-xl`}>
+						<ul className="list-none flex justify-end items-start flex-col gap-4 text-richblack-5">
 							{token ? (
 								<>
 									{TokenMobNavbarLinks.map((link, index) => (
@@ -154,21 +153,20 @@ const Navbar = () => {
 												<>
 													<button
 														onClick={() =>
-															setConfirmationModel({
+															setConfirmationModal({
 																text1: "Are you sure?",
-																text2:
-																	"You will be logged out of your account.",
+																text2: "You will be logged out of your account.",
 																btn1Text: "Logout",
 																btn2Text: "Cancel",
 																btn1Handler: () => bbtn1Hnad(),
-																btn2Handler: () => setConfirmationModel(null),
+																btn2Handler: () => setConfirmationModal(null),
 															})
 														}
 														className="text-[16px] font-poppins text-white font-medium cursor-pointer">
 														<span>Logout</span>
 													</button>
 												</>
-											) : link?.title === "Catalog" ? (
+											) : link?.title === "Category" ? (
 												<>
 													<div
 														onClick={(e) => {
@@ -176,9 +174,9 @@ const Navbar = () => {
 															setToggleSub(!toggleSub);
 														}}
 														className={`flex gap-1 ${
-															matchRoute("/catalog/:catalogName")
+															matchRoute("/category/:categoryName")
 																? "text-yellow-25"
-																: "text-richblack-25"
+																: "text-richblack-5"
 														} flex flex-col`}>
 														<div className="flex items-center justify-center gap-1">
 															<p>{link.title}</p>
@@ -187,7 +185,7 @@ const Navbar = () => {
 														<div
 															className={`${
 																!toggleSub ? "hidden" : "block"
-															} md:hidden border p-2 flex-col rounded-lg text-richblack-5 bg-richblack-900`}>
+															} md:hidden border p-2 flex-col rounded-lg bg-richblack-800`}>
 															{loading ? (
 																<p className="text-center">Loading...</p>
 															) : subLinks?.length ? (
@@ -198,7 +196,7 @@ const Navbar = () => {
 																				setToggleSub(!toggleSub);
 																				setToggle(!toggle);
 																			}}
-																			to={`/catalog/${subLink.name
+																			to={`/category/${subLink.name
 																				.split(" ")
 																				.join("-")
 																				.toLowerCase()}`}
@@ -220,7 +218,7 @@ const Navbar = () => {
 													className={`${
 														matchRoute(link?.path)
 															? "text-yellow-25"
-															: "text-richblack-25"
+															: "text-richblack-5"
 													} font-poppins text-[16px] font-medium cursor-pointer`}
 													onClick={() => {
 														setToggle(!toggle);
@@ -235,7 +233,7 @@ const Navbar = () => {
 								<>
 									{MobNavbarLinks.map((link, index) => (
 										<>
-											{link?.title === "Catalog" ? (
+											{link?.title === "Category" ? (
 												<>
 													<div
 														onClick={(e) => {
@@ -243,9 +241,9 @@ const Navbar = () => {
 															setToggleSub(!toggleSub);
 														}}
 														className={`flex gap-1 ${
-															matchRoute("/catalog/:catalogName")
+															matchRoute("/category/:categoryName")
 																? "text-yellow-25"
-																: "text-richblack-800"
+																: "text-richblack-5"
 														} flex flex-col`}>
 														<div className="flex items-center justify-center gap-1">
 															<p>{link.title}</p>
@@ -254,7 +252,7 @@ const Navbar = () => {
 														<div
 															className={`${
 																!toggleSub ? "hidden" : "block"
-															} md:hidden border p-2 flex-col rounded-lg text-richblack-5 bg-richblack-900`}>
+															} md:hidden border p-2 flex-col rounded-lg bg-richblack-800`}>
 															{loading ? (
 																<p className="text-center">Loading...</p>
 															) : subLinks?.length ? (
@@ -265,7 +263,7 @@ const Navbar = () => {
 																				setToggleSub(!toggleSub);
 																				setToggle(!toggle);
 																			}}
-																			to={`/catalog/${subLink.name
+																			to={`/category/${subLink.name
 																				.split(" ")
 																				.join("-")
 																				.toLowerCase()}`}
@@ -282,20 +280,18 @@ const Navbar = () => {
 													</div>
 												</>
 											) : (
-												<>
-													<li
-														key={index}
-														className={`${
-															matchRoute(link?.path)
-																? "text-yellow-25"
-																: "text-richblack-800"
-														} font-poppins text-[16px] font-medium cursor-pointer`}
-														onClick={() => {
-															setToggle(!toggle);
-														}}>
-														<Link to={link?.path}>{link.title}</Link>
-													</li>
-												</>
+												<li
+													key={index}
+													className={`${
+														matchRoute(link?.path)
+															? "text-yellow-25"
+															: "text-richblack-5"
+													} font-poppins text-[16px] font-medium cursor-pointer`}
+													onClick={() => {
+														setToggle(!toggle);
+													}}>
+													<Link to={link?.path}>{link.title}</Link>
+												</li>
 											)}
 										</>
 									))}
@@ -303,9 +299,11 @@ const Navbar = () => {
 							)}
 						</ul>
 					</div>
-		        </div>
-                {confirmationModel && <ConfirmationModel modelData={confirmationModel} />}
+				</div>
             </div>
+
+            {/* Confirmation Modal */}
+            {confirmationModal && <ConfirmationModal {...confirmationModal} />}
         </div>
     );
 };

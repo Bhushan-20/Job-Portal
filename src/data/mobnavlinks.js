@@ -4,7 +4,7 @@ export const MobNavbarLinks = [
       path: "/",
     },
     {
-      title: "Catalog",
+      title: "Category",
       // path: '/catalog',
     },
     {

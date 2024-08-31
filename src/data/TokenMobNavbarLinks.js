@@ -4,16 +4,12 @@ export const TokenMobNavbarLinks = [
       path: "/",
     },
     {
-      title: "Catalog",
+      title: "Category",
       // path: '/catalog',
     },
     {
       title: "About Us",
       path: "/about",
-    },
-    {
-      title: "Contact Us",
-      path: "/contact",
     },
     {
       title: "Dashboard",
