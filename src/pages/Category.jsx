@@ -70,7 +70,7 @@ const Category = () => {
 
   return (
     <div>
-      <div className="box-content bg-richblack-800 px-4">
+      <div className="box-content px-4">
         <div className="mx-auto flex min-h-[260px] max-w-maxContentTab flex-col justify-center gap-4 lg:max-w-maxContent">
           {/* //<p className="text-5xl text-yellow-400">Category</p> */}
           <p className="text-5xl text-yellow-200">
