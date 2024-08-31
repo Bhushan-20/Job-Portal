@@ -1,12 +1,12 @@
-import { FcGoogle } from "react-icons/fc"
-import { useSelector } from "react-redux"
+import { FcGoogle } from "react-icons/fc";
+import { useSelector } from "react-redux";
 
-import frameImg from "../../../assets/Images/frame.png"
-import LoginForm from "./LoginForm"
-import SignupForm from "./SignupForm"
+import frameImg from "../../../assets/Images/frame.png";
+import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
 
 function Template({ title, description1, description2, image, formType }) {
-  const { loading } = useSelector((state) => state.auth)
+  const { loading } = useSelector((state) => state.auth);
 
   return (
     <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
@@ -30,16 +30,16 @@ function Template({ title, description1, description2, image, formType }) {
             <img
               src={image}
               alt="Students"
-              width={558}
+              width={608}
               height={504}
               loading="lazy"
-              className="absolute top-10 right-4 z-10"
+              className="absolute top-10 right-4 z-10 image-animate"
             />
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default Template
+export default Template;

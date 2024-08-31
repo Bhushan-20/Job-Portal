@@ -6,6 +6,7 @@
 html,
 body {
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 /* ===== Scrollbar CSS ===== */
@@ -46,4 +47,71 @@ details > summary::-webkit-details-marker {
 
 .form-style {
   @apply rounded-lg bg-richblack-700 p-3 text-[16px] leading-[24px] text-richblack-5 shadow-[0_1px_0_0] shadow-white/50 placeholder:text-richblack-400 focus:outline-none;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-10%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.image-animate {
+  animation: slideIn 1.5s ease-out;
+}
+
+.fadeIn {
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* In your global CSS file or a separate CSS module */
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Tailwind custom CSS */
+.slide-in-left {
+  animation: slideInFromLeft 1s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInFromRight 1s ease-out;
 }

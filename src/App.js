@@ -47,7 +47,7 @@ function App() {
     }
   }, [token])
   return (
-    <div className="w-screen min-h-screen bg-richblack-700 flex flex-col font-inter">
+    <div className="w-screen min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-black flex flex-col font-inter">
       <Navbar/>
       <Routes>
           <Route path="/" element={<Home/>}/>

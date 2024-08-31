@@ -28,9 +28,9 @@ const JobsTable = ({ jobs, setJobs }) => {
         <>
             <Table className="rounded-xl border border-richblack-800">
                 <Thead>
-                    <Tr className="rounded-t-md border-b border-b-richblack-800 px-6 py-2">
+                    <Tr className="rounded-t-md border-b border-b-white px-6 py-2">
                         <Th className="text-left text-2xl font-bold uppercase text-yellow-100">
-                            Available Jobs
+                            
                         </Th>
                     </Tr>
                 </Thead>

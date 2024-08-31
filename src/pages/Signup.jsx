@@ -1,6 +1,6 @@
 //import signupImg from "../assets/Images/signup.webp"
 import Template from "../components/core/Auth/Template"
-import signUpImg from "../assets/Images/job-portal-2.jpg"
+import signUpImg from "../assets/Images/portal.jpg"
 
 function Signup() {
   return (
