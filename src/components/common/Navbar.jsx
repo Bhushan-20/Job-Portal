@@ -156,10 +156,10 @@ const Navbar = () => {
 															setConfirmationModal({
 																text1: "Are you sure?",
 																text2: "You will be logged out of your account.",
-																btn1Text: "Logout",
+																btn1Text: !loading ? "Logout" : "Loading...",
 																btn2Text: "Cancel",
-																btn1Handler: () => bbtn1Hnad(),
-																btn2Handler: () => setConfirmationModal(null),
+																btn1Handler: !loading ? () => bbtn1Hnad() : () => {},
+																btn2Handler: !loading ? () => setConfirmationModal(null) : () => {},
 															})
 														}
 														className="text-[16px] font-poppins text-white font-medium cursor-pointer">
@@ -303,7 +303,7 @@ const Navbar = () => {
             </div>
 
             {/* Confirmation Modal */}
-            {confirmationModal && <ConfirmationModal {...confirmationModal} />}
+            {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
         </div>
     );
 };
