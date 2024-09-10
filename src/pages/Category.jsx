@@ -22,18 +22,13 @@ const Category = () => {
         try {
             const result = await apiConnector("GET", allcategories.CATEGORIES_API);
     
-            // Assuming 'result.data.categories' is the correct path to the categories array
             const categories = result.data.categories;
               
-            // Filter the categories based on the name match
             const category = categories?.find((ct) => 
                 ct.name.split(" ").join("-").toLowerCase() === categoryName.toLowerCase()
             );
     
-            // Extract the category_id if the category was found
             const category_id = category?._id;
-    
-            // Set the category_id or an empty string if no matching category is found
             setCategoryId(category_id);
     
         } catch (error) {
@@ -46,7 +41,6 @@ const Category = () => {
             (async () => {
                 try {
                     const res = await categoryPageDetails(categoryId);
-                    
                     setCategoryPageData(res);
                 } catch (error) {
                     console.error("Error fetching category page details:", error);
@@ -69,12 +63,25 @@ const Category = () => {
         return deadlineDate < new Date();
     };
 
+    // Helper function to split the category name into letters and animate them
+    const renderCategoryName = (name) => {
+        return name.split("").map((letter, index) => (
+            <span 
+                key={index} 
+                className="letter" 
+                style={{ animationDelay: `${index * 0.1}s` }}
+            >
+                {letter}
+            </span>
+        ));
+    };
+
     return (
         <div>
             <div className="box-content px-4">
                 <div className="mx-auto flex min-h-[260px] max-w-maxContentTab flex-col justify-center gap-4 lg:max-w-maxContent">
                     <p className="text-5xl text-yellow-200">
-                        {categoryPageData?.name || "Loading..."}
+                        {categoryPageData?.name ? renderCategoryName(categoryPageData.name) : "Loading..."}
                     </p>
                     <p className="text-2xl text-richblack-5">
                         {categoryPageData?.description || "Loading..."}
@@ -128,15 +135,15 @@ const Category = () => {
                                         </p>
                                     </div>
                                     <div className="mt-4 flex justify-end">
-                                            {user?.accountType === "Applicant" && !hasDeadlinePassed(job.deadline) && (
-                                                <button
-                                                    onClick={() => handleApply(job._id)}
-                                                    className="bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer rounded-md py-2 px-6 font-semibold text-richblack-900"
-                                                >
-                                                    Apply
-                                                </button>
-                                            )}
-                                        </div>
+                                        {user?.accountType === "Applicant" && !hasDeadlinePassed(job.deadline) && (
+                                            <button
+                                                onClick={() => handleApply(job._id)}
+                                                className="bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer rounded-md py-2 px-6 font-semibold text-richblack-900"
+                                            >
+                                                Apply
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                         </div>
