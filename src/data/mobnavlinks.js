@@ -12,6 +12,10 @@ export const MobNavbarLinks = [
       path: "/about",
     },
     {
+      title: "Jobs",
+      path: "/jobs",
+    },
+    {
       title: "Login",
       path: "/login",
     },

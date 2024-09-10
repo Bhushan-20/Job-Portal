@@ -12,6 +12,10 @@ export const TokenMobNavbarLinks = [
       path: "/about",
     },
     {
+      title: "Jobs",
+      path: "/jobs",
+    },
+    {
       title: "Dashboard",
       path: "/dashboard/my-profile",
     },
