@@ -39,7 +39,7 @@ const Home = () => {
       <div className='relative mx-auto flex flex-col w-11/12 max-w-screen-xl items-center text-white justify-between'>
         {/* Part - 1 */}
         <div className='flex flex-col lg:flex-row gap-10 lg:gap-20 items-center'>
-          <div className='lg:w-[45%] flex flex-col mt-[80px] md:mt-[160px] slide-in-left'>
+          <div className='lg:w-[45%] flex flex-col mt-[80px] md:mt-[160px] slide-in-left fade-in'>
             <p className='text-3xl md:text-4xl lg:text-6xl'>Connecting Talent with Opportunity</p>
             <p className='text-richblack-300 font-bold w-[90%] md:w-[80%] text-lg md:text-2xl lg:text-3xl mt-4'>
               Your dream job is just a click away with&nbsp;
