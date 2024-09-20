@@ -146,3 +146,17 @@ details > summary::-webkit-details-marker {
 .fade-in {
   animation: fadeIn 2s ease-in;
 }
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill {
+  background-color: #1a1a2e; /* Rich black background */
+  color: #d1d1e9; /* Light grey text */
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 12px;
+}

@@ -62,16 +62,16 @@ const JobsTable = ({ jobs, setJobs }) => {
                                         <h2 className="text-2xl font-bold mb-2">
                                             Role: <span className="text-xl">{job.title}</span>
                                         </h2>
-                                        <p className="mb-2">Company: {job.company}</p>
-                                        
-                                        <p className="mb-2">
-                                            Skills: {job.skillsets.map((skill) => (
-                                                <span key={skill} className="inline-block bg-richblack-700 text-richblack-300 text-sm px-2 py-1 mr-2 rounded-lg">
+                                        <p className="mb-2"><span className="font-bold">Company:</span> {job.company}</p>
+                                        <p className="mb-2"><span className="font-bold">Job Type:</span> {job.jobType}</p>
+                                        <p className="mb-2 skills-container">
+                                        <span className="font-bold">Skills:</span> {job.skillsets.map((skill) => (
+                                                <span key={skill} className="inline-block skill bg-richblack-700 text-richblack-300 text-sm px-2 py-1 mr-2 rounded-lg">
                                                     {skill}
                                                 </span>
                                             ))}
                                         </p>
-                                        <p className="mb-2" style={{ color: hasDeadlinePassed(job.deadline) ? 'red' : 'inherit' }}>
+                                        <p className="mb-2 font-bold" style={{ color: hasDeadlinePassed(job.deadline) ? 'red' : 'inherit' }}>
                                             {hasDeadlinePassed(job.deadline) ? (
                                                 "No longer accepting applications"
                                             ) : (
@@ -91,13 +91,13 @@ const JobsTable = ({ jobs, setJobs }) => {
                                     </div>
 
                                     {/* Right side - Other details (hidden on small screens) */}
-                                    <div className={`flex-1 bg-richblack-700 shadow-lg rounded-lg p-6 text-richblack-100 ${showMoreInfo[job._id] ? 'block' : 'hidden'} md:block`}>
-                                        <p className="mb-2">Salary: &#8377; {job.salary} per month</p>
-                                        <p className="mb-2">Date Of Posting: {new Date(job.dateOfPosting).toLocaleDateString()}</p>
-                                        <p className="mb-2">Number of Applicants: {job.maxApplicants}</p>
-                                        <p className="mb-2">Number of Positions: {job.maxPositions}</p>
-                                        <p className="mb-4">Description: {job.description}</p>
-                                        <p className="mb-2">Location: {job.location}</p>
+                                    <div className={`flex-1 bg-richblack-100 shadow-lg rounded-lg p-6 text-richblack-800 ${showMoreInfo[job._id] ? 'block' : 'hidden'} md:block`}>
+                                        <p className="mb-2"><span className="font-bold text-black text-lg">Salary:</span> &#8377; {job.salary} per month</p>
+                                        <p className="mb-2"><span className="font-bold text-black text-lg">Date of Posting:</span> {new Date(job.dateOfPosting).toLocaleDateString()}</p>
+                                        <p className="mb-2"><span className="font-bold text-black text-lg">Max Applications:</span> {job.maxApplicants}</p>
+                                        <p className="mb-2"><span className="font-bold text-black text-lg">Number of Positions:</span> {job.maxPositions}</p>
+                                        <p className="mb-4"><span className="font-bold text-black text-lg">Description:</span> {job.description}</p>
+                                        <p className="mb-2"><span className="font-bold text-black text-lg">Location:</span> {job.location}</p>
                                     </div>
 
                                     {/* Toggle button for small devices */}
