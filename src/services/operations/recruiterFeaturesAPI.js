@@ -36,7 +36,6 @@ export const getAllJobs = async (token) => {
 };
 
 export const getAllJobsApplicant = async (token) => {
-    const toastId = toast.loading("Loading...");
     let result = [];
     try {
         const response = await apiConnector("GET", GET_ALL_JOBS_APPLI_API, null, {
@@ -50,7 +49,6 @@ export const getAllJobsApplicant = async (token) => {
     } catch (error) {
         toast.error(error.response?.data?.message || "Internal Server Error");
     }
-    toast.dismiss(toastId);
     return result;
 };
 

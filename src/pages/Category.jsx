@@ -9,42 +9,44 @@ import { applyJob } from "../services/operations/applicantFeaturesAPI";
 const Category = () => { 
     const { token } = useSelector((state) => state.auth);
     const { user } = useSelector((state) => state.user);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);  // Loading state
     const { categoryName } = useParams();
     const [categoryPageData, setCategoryPageData] = useState(null);
     const [categoryId, setCategoryId] = useState("");
 
     useEffect(() => {
         fetchCategories(); // Call fetchCategories to load data on component mount
-    }, [categoryName]); // Include categoryName in the dependency array to refetch when the category changes
+    }, [categoryName]);
 
     const fetchCategories = async () => {
+        setLoading(true);  // Start loading
         try {
             const result = await apiConnector("GET", allcategories.CATEGORIES_API);
     
             const categories = result.data.categories;
-              
             const category = categories?.find((ct) => 
                 ct.name.split(" ").join("-").toLowerCase() === categoryName.toLowerCase()
             );
     
             const category_id = category?._id;
             setCategoryId(category_id);
-    
         } catch (error) {
             console.error("Could not fetch Categories.", error);
         }
+        setLoading(false);  // Stop loading
     };
 
     useEffect(() => {
         if (categoryId) {
             (async () => {
+                setLoading(true);  // Start loading
                 try {
                     const res = await categoryPageDetails(categoryId);
                     setCategoryPageData(res);
                 } catch (error) {
                     console.error("Error fetching category page details:", error);
                 }
+                setLoading(false);  // Stop loading
             })();
         }
     }, [categoryId]);
@@ -80,12 +82,18 @@ const Category = () => {
         <div>
             <div className="box-content px-4">
                 <div className="mx-auto flex min-h-[260px] max-w-maxContentTab flex-col justify-center gap-4 lg:max-w-maxContent">
-                    <p className="text-5xl text-yellow-200">
-                        {categoryPageData?.name ? renderCategoryName(categoryPageData.name) : "Loading..."}
-                    </p>
-                    <p className="text-2xl text-richblack-5">
-                        {categoryPageData?.description || "Loading..."}
-                    </p>
+                    {loading ? (
+                        <div className="spinner"></div>  // Spinner for category name loading
+                    ) : (
+                        <>
+                            <p className="text-5xl text-yellow-200">
+                                {categoryPageData?.name ? renderCategoryName(categoryPageData.name) : "Loading..."}
+                            </p>
+                            <p className="text-2xl text-richblack-5">
+                                {categoryPageData?.description || "Loading..."}
+                            </p>
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -93,7 +101,9 @@ const Category = () => {
                 <div className="section_heading text-white text-3xl">Jobs Available</div>
                 
                 {loading ? (
-                    <div className="text-white mt-4">Loading jobs...</div>
+                    <div className="flex justify-center items-center mt-4">
+                        <div className="spinner"></div>  // Spinner for jobs loading
+                    </div>
                 ) : categoryPageData?.jobs?.length > 0 ? (
                     <div className="py-8">
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
