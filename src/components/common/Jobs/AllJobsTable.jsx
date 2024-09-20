@@ -1,20 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
-import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllJobs, deleteJob, getApplicationsForJob } from "../../../services/operations/recruiterFeaturesAPI";
 import { applyJob } from "../../../services/operations/applicantFeaturesAPI";
 
 const JobsTable = ({ jobs, setJobs }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { token } = useSelector((state) => state.auth);
-    const { user } = useSelector((state) => state.user); 
+    const { user } = useSelector((state) => state.user);
 
     const [loading, setLoading] = useState(false);
-    const [selectedJobId, setSelectedJobId] = useState(null);
-    const [showMoreInfo, setShowMoreInfo] = useState({}); // Track the visibility of more info for each job
+    const [showMoreInfo, setShowMoreInfo] = useState({}); // Track visibility of more info for each job
 
     const handleApply = async (jobId) => {
         const sop = "This is my statement of purpose"; // Replace with actual SOP
@@ -37,26 +33,26 @@ const JobsTable = ({ jobs, setJobs }) => {
     };
 
     return (
-        <>
-            <Table className="rounded-xl border border-richblack-800">
-                <Thead>
-                    <Tr className="rounded-t-md border-b border-b-white px-6 py-2">
-                        <Th className="text-left text-2xl font-bold uppercase text-yellow-100">
-                            
-                        </Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
+        <div className="overflow-x-auto">
+            <table className="min-w-full rounded-xl border border-richblack-800">
+                <thead>
+                    <tr className="rounded-t-md border-b border-b-white">
+                        <th className="text-left text-2xl font-bold uppercase text-yellow-100 p-4">
+                            Job Listings
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
                     {jobs?.length === 0 ? (
-                        <Tr>
-                            <Td colSpan="2" className="py-10 text-center text-2xl font-medium text-richblack-100">
+                        <tr>
+                            <td colSpan="2" className="py-10 text-center text-2xl font-medium text-richblack-100">
                                 No Jobs found
-                            </Td>
-                        </Tr>
+                            </td>
+                        </tr>
                     ) : (
                         jobs.map((job) => (
-                            <Tr key={job._id} className="border-b border-richblack-800 ">
-                                <Td className="flex sm:flex-col md:flex-row gap-4 p-6 sm:items-center justify-center sm:justify-center">
+                            <tr key={job._id} className="border-b border-richblack-800">
+                                <td className="p-6 flex flex-col sm:flex-row gap-4 items-center">
                                     {/* Left side - Job card */}
                                     <div className="flex-1 bg-richblack-800 shadow-lg rounded-lg p-6 text-richblack-100 max-w-sm">
                                         <h2 className="text-2xl font-bold mb-2">
@@ -65,7 +61,7 @@ const JobsTable = ({ jobs, setJobs }) => {
                                         <p className="mb-2"><span className="font-bold">Company:</span> {job.company}</p>
                                         <p className="mb-2"><span className="font-bold">Job Type:</span> {job.jobType}</p>
                                         <p className="mb-2 skills-container">
-                                        <span className="font-bold">Skills:</span> {job.skillsets.map((skill) => (
+                                            <span className="font-bold">Skills:</span> {job.skillsets.map((skill) => (
                                                 <span key={skill} className="inline-block skill bg-richblack-700 text-richblack-300 text-sm px-2 py-1 mr-2 rounded-lg">
                                                     {skill}
                                                 </span>
@@ -103,17 +99,17 @@ const JobsTable = ({ jobs, setJobs }) => {
                                     {/* Toggle button for small devices */}
                                     <button
                                         onClick={() => toggleMoreInfo(job._id)}
-                                        className="mt-4 bg-richblack-700 justify-end text-richblack-300 rounded-lg py-2  px-4 md:hidden w-[140px]"
+                                        className="mt-4 bg-richblack-700 justify-end text-richblack-300 rounded-lg py-2 px-4 md:hidden w-[140px]"
                                     >
                                         {showMoreInfo[job._id] ? 'Hide Info' : 'More Info'}
                                     </button>
-                                </Td>
-                            </Tr>
+                                </td>
+                            </tr>
                         ))
                     )}
-                </Tbody>
-            </Table>
-        </>
+                </tbody>
+            </table>
+        </div>
     );
 };
 

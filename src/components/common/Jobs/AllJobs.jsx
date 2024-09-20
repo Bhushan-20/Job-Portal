@@ -97,8 +97,8 @@ const AllJobs = () => {
                 </div>
 
                 {/* Job Type Filters */}
-                <div className="flex justify-center mt-6 space-x-6">
-                    <label className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105">
+                <div className="flex flex-wrap justify-center mt-6 space-x-4">
+                    <label className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105 w-32 justify-center mb-2">
                         <input
                             type="checkbox"
                             name="fullTime"
@@ -108,7 +108,7 @@ const AllJobs = () => {
                         />
                         Full-time
                     </label>
-                    <label className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105">
+                    <label className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105 w-32 justify-center mb-2">
                         <input
                             type="checkbox"
                             name="partTime"
@@ -118,7 +118,7 @@ const AllJobs = () => {
                         />
                         Part-time
                     </label>
-                    <label className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105">
+                    <label className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105 w-32 justify-center mb-2">
                         <input
                             type="checkbox"
                             name="internship"
@@ -129,6 +129,7 @@ const AllJobs = () => {
                         Internship
                     </label>
                 </div>
+
             </div>
 
             {/* Display loader or jobs table */}
