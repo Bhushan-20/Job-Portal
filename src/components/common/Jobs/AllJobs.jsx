@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getAllJobsApplicant } from "../../../services/operations/recruiterFeaturesAPI";
 import AllJobsTable from './AllJobsTable';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch } from "react-icons/fa";
 
 const AllJobs = () => {
     const { token } = useSelector((state) => state.auth);
@@ -12,6 +12,7 @@ const AllJobs = () => {
     const [jobs, setJobs] = useState([]);
     const [filteredJobs, setFilteredJobs] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(true); // Add loading state
     const [selectedJobTypes, setSelectedJobTypes] = useState({
         fullTime: false,
         partTime: false,
@@ -21,12 +22,14 @@ const AllJobs = () => {
     // Fetching all jobs on component mount
     useEffect(() => {
         const fetchJobs = async () => {
+            setLoading(true); // Start loading
             const result = await getAllJobsApplicant(token);
             if (result) {
                 setJobs(result);
                 setFilteredJobs(result); // Initially set filtered jobs to all jobs
             }
-        }
+            setLoading(false); // Stop loading
+        };
         fetchJobs();
     }, [token]);
 
@@ -76,7 +79,7 @@ const AllJobs = () => {
 
                 {/* Search Bar */}
                 <div className="flex justify-center mt-10 w-full">
-                    <div className="flex items-center border-2 border-gray-300 rounded-full shadow-md overflow-hidden w-full max-w-xl bg-white">
+                    <div className="flex items-center border-2 border-richblack-300 rounded-full shadow-md overflow-hidden w-full max-w-xl bg-white">
                         <input
                             type="text"
                             className="w-full px-6 py-3 text-richblack-800 focus:outline-none rounded-l-full"
@@ -85,7 +88,7 @@ const AllJobs = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                         <button
-                            className="bg-yellow-500 text-white px-6 py-3 rounded-r-full hover:bg-yellow-600 transition-all duration-300 ease-in-out"
+                            className="bg-white text-xl px-6 py-3 rounded-r-full transition-all duration-300 ease-in-out"
                             onClick={handleSearch}
                         >
                             <FaSearch />
@@ -128,8 +131,12 @@ const AllJobs = () => {
                 </div>
             </div>
 
-            {/* Display the filtered jobs */}
-            {filteredJobs.length > 0 ? (
+            {/* Display loader or jobs table */}
+            {loading ? (
+                <div className="flex justify-center items-center">
+                    <div className="spinner"></div> {/* Spinner instead of text */}
+                </div>
+            ) : filteredJobs.length > 0 ? (
                 <AllJobsTable jobs={filteredJobs} setJobs={setJobs} />
             ) : (
                 <p className="text-center text-red-500">No jobs found for your search.</p>
