@@ -50,7 +50,6 @@ export const applyJob = async (jobId, sop, token) => {
 };
 
 export const getApplications = async (token) => {
-    const toastId = toast.loading("Loading...")
     let result = []
     try{
         const response = await apiConnector("GET", GET_APPLICATIONS, null, {Authorization : `Bearer ${token}`})
@@ -61,7 +60,6 @@ export const getApplications = async (token) => {
     }catch(err){
         toast.error(err.response.data.message)
     }
-    toast.dismiss(toastId)
     return result
 }
 

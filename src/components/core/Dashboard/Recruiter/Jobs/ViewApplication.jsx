@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getApplicationsForJob,updateApplicationStatus } from "../../../../../services/operations/recruiterFeaturesAPI";
+import { getApplicationsForJob, updateApplicationStatus } from "../../../../../services/operations/recruiterFeaturesAPI";
 import { toast } from 'react-toastify';
 
 const ViewApplication = () => {
@@ -28,22 +28,24 @@ const ViewApplication = () => {
     fetchJobApplications();
   }, [jobId, token]);
 
-  const handleShortlist = async(applicationId,newStatus) => {
-    const updateStatus = await updateApplicationStatus(applicationId,newStatus,token);
+  const handleShortlist = async (applicationId, newStatus) => {
+    await updateApplicationStatus(applicationId, newStatus, token);
   };
 
-  const handleReject = async(applicationId,newStatus) => {
-    const updateStatus = await updateApplicationStatus(applicationId,newStatus,token)
+  const handleReject = async (applicationId, newStatus) => {
+    await updateApplicationStatus(applicationId, newStatus, token);
   };
-
-  if (loading) {
-    return <div className="text-center text-white">Loading applications...</div>;
-  }
 
   return (
     <div className="text-white container mx-auto px-4 py-6">
       <h2 className="text-3xl font-semibold mb-6">Applications for Selected Job</h2>
-      {jobApplications.length === 0 ? (
+
+      {loading ? (
+        <div className="flex justify-center items-center">
+          {/* Spinner */}
+          <div className="loader1 ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32"></div>
+        </div>
+      ) : jobApplications.length === 0 ? (
         <p>No applications found for this job.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -79,29 +81,28 @@ const ViewApplication = () => {
                   </a>
                 </p>
               </div>
-            <div className="flex justify-between items-center mt-auto">
+              <div className="flex justify-between items-center mt-auto">
                 {application.status === 'shortlisted' ? (
-                    <p className="text-green-500 font-semibold">Accepted</p>
+                  <p className="text-green-500 font-semibold">Accepted</p>
                 ) : application.status === 'rejected' ? (
-                    <p className="text-red-500 font-semibold">Rejected</p>
+                  <p className="text-red-500 font-semibold">Rejected</p>
                 ) : (
-                    <>
+                  <>
                     <button 
-                        onClick={() => handleShortlist(application._id,'shortlisted')} 
-                        className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+                      onClick={() => handleShortlist(application._id, 'shortlisted')} 
+                      className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
                     >
-                        Shortlist
+                      Shortlist
                     </button>
                     <button 
-                        onClick={() => handleReject(application._id,'rejected')} 
-                        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
+                      onClick={() => handleReject(application._id, 'rejected')} 
+                      className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
                     >
-                        Reject
+                      Reject
                     </button>
-                    </>
+                  </>
                 )}
-            </div>
-
+              </div>
             </div>
           ))}
         </div>
