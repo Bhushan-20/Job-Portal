@@ -41,7 +41,6 @@ export async function getRecruiterDetails(token) {
 
 export const getAllCategories = async()=> {
     const { CATEGORIES_API } = allcategories;
-    const toastId = toast.loading("Loading...");
     let result = [];
   try {
     const response = await apiConnector("GET", CATEGORIES_API)
@@ -56,7 +55,6 @@ export const getAllCategories = async()=> {
 }
 
 export const categoryPageDetails = async(categoryId) => {
-    const toastId = toast.loading("Loading...")
     let result = []
     try{
         const response = await apiConnector("POST",allcategories.CATEGORY_PAGE_DETAILS,{CategoryId: categoryId,})
@@ -69,6 +67,5 @@ export const categoryPageDetails = async(categoryId) => {
         toast.error(error.response.data.message)
         result = error.response?.data
       }
-      toast.dismiss(toastId)
       return result
 }

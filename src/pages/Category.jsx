@@ -9,17 +9,17 @@ import { applyJob } from "../services/operations/applicantFeaturesAPI";
 const Category = () => { 
     const { token } = useSelector((state) => state.auth);
     const { user } = useSelector((state) => state.user);
-    const [loading, setLoading] = useState(false);  // Loading state
+    const [loading, setLoading] = useState(false);
     const { categoryName } = useParams();
     const [categoryPageData, setCategoryPageData] = useState(null);
     const [categoryId, setCategoryId] = useState("");
 
     useEffect(() => {
-        fetchCategories(); // Call fetchCategories to load data on component mount
+        fetchCategories(); 
     }, [categoryName]);
 
     const fetchCategories = async () => {
-        setLoading(true);  // Start loading
+        setLoading(true);
         try {
             const result = await apiConnector("GET", allcategories.CATEGORIES_API);
     
