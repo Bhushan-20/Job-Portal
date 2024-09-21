@@ -135,6 +135,7 @@ const AllJobs = () => {
             {/* Display loader or jobs table */}
             {loading ? (
                 <div className="flex justify-center items-center">
+                    {/* <div className="spinner"></div> Spinner instead of text */}
                     <div id='load'><div>G</div>
                         <div>N</div>
                         <div>I</div>

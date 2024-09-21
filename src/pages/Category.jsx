@@ -83,7 +83,7 @@ const Category = () => {
             <div className="box-content px-4">
                 <div className="mx-auto flex min-h-[260px] max-w-maxContentTab flex-col justify-center gap-4 lg:max-w-maxContent">
                     {loading ? (
-                        <div className="spinner"></div>  // Spinner for category name loading
+                        <div className="spinner"></div>
                     ) : (
                         <>
                             <p className="text-5xl text-yellow-200">
