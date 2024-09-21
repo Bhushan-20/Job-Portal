@@ -102,7 +102,7 @@ const Category = () => {
                 
                 {loading ? (
                     <div className="flex justify-center items-center mt-4">
-                        <div className="spinner"></div>  // Spinner for jobs loading
+                        <div className="spinner"></div>
                     </div>
                 ) : categoryPageData?.jobs?.length > 0 ? (
                     <div className="py-8">
