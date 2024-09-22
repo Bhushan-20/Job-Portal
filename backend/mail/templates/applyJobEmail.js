@@ -95,7 +95,7 @@ exports.applyJobEmail = (jobName, name) => {
                 <p>Dear ${name},</p>
                 <p>Thank you for applying to the <span class="highlight">"${jobName}"</span> position. We have received your application, and our team is currently reviewing your details.</p>
                 <p>In the meantime, you can visit your dashboard to track your application status and explore other job opportunities that match your profile.</p>
-                <a class="cta" href="https://jobify-bhushan.vercel.app/dashboard">Go to Dashboard</a>
+                <a class="cta" href="https://jobify-bhushan.vercel.app/dashboard/my-profile">Go to Dashboard</a>
             </div>
             <div class="support">If you have any questions or need further assistance, feel free to contact us at <a href="mailto:info@jobify.com">info@jobify.com</a>.</div>
             <div class="footer">
