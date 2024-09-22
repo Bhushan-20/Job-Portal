@@ -8,6 +8,9 @@ const mongoose = require("mongoose");
 const ObjectId = require("mongoose").Types.ObjectId;
 const { uploadFileToCloudinary } = require("../utils/fileUploader");
 const nodemailer = require('nodemailer');
+const mailSender = require("../utils/mailSender");
+const { applyJobEmail } = require("../mail/templates/applyJobEmail");
+
 
 require("dotenv").config();
 
@@ -257,9 +260,26 @@ exports.applyForJob = async (req, res) => {
     });
 
     await application.save();
+    const upUser = await User.findById(userId)
+    // Send notification email to applicant
+    try {
+      const emailResponse = await mailSender(
+        user.email,
+        "Job Application Confirmation",
+        applyJobEmail(job.title, `${upUser.firstName} ${upUser.lastName}`)
+      );
+    } catch (error) {
+      // If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
+      console.error("Error occurred while sending email:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Error occurred while sending email",
+        error: error.message,
+      });
+    }
 
     return res.status(201).json({
-      message: "Job application successful",
+      message: "Job application successful, confirmation email sent",
       application,
     });
   } catch (error) {
@@ -270,6 +290,7 @@ exports.applyForJob = async (req, res) => {
     });
   }
 };
+
 
 //Recruiter -> Get Total Applications for a particular job
 exports.getApplicationsForJob = async (req, res) => {
