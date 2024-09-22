@@ -66,8 +66,8 @@ const otpTemplate = (otp) => {
 	
 	<body>
 		<div class="container">
-			<a href="https://studynotion-edtech-project.vercel.app"><img class="logo"
-					src="backend\mail\templates\Logo_jobify.svg.png" alt="Jobify"></a>
+			<a href="https://jobify-bhushan.vercel.app/"><img class="logo"
+					src="https://res.cloudinary.com/dukvkbkoh/image/upload/v1727033057/Jobify/Logo_jobify.svg_bnuggk.png" alt="Jobify"></a>
 			<div class="message">OTP Verification Email</div>
 			<div class="body">
 				<p>Dear User,</p>
@@ -78,7 +78,7 @@ const otpTemplate = (otp) => {
 				Once your account is verified, you will have access to our platform and its features.</p>
 			</div>
 			<div class="support">If you have any questions or need assistance, please feel free to reach out to us at <a
-					href="mailto:info@studynotion.com">info@studynotion.com</a>. We are here to help!</div>
+					href="mailto:info@jobify.com">info@jobify.com</a>. We are here to help!</div>
 		</div>
 	</body>
 	
