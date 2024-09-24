@@ -29,10 +29,6 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return <Preloader />;
-  }
-
   return (
     <div>
       {/* Section - 1 */}

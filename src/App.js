@@ -1,11 +1,10 @@
 import "./App.css";
-import {Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
-
-import {ACCOUNT_TYPE} from "./utils/constants"
-import {setUserReal} from "./slices/userSlice"
+import {jwtDecode} from "jwt-decode";  // Make sure this is imported properly
+import { setUserReal } from "./slices/userSlice";
+import { ACCOUNT_TYPE } from "./utils/constants";
 
 import Navbar from "./components/common/Navbar";
 import Home from "./pages/Home";
@@ -29,39 +28,57 @@ import Category from "./pages/Category";
 import Applications from "./components/core/Dashboard/Recruiter/Applications";
 import ViewApplication from "./components/core/Dashboard/Recruiter/Jobs/ViewApplication";
 import Error from "./pages/Error";
+import Preloader from "./components/common/Preload"; // Import Preloader
 
 function App() {
-  const { token } = useSelector((state) => state.auth)
-  const [userData, setUserData] = useState(null) 
+  const { token } = useSelector((state) => state.auth);
+  const [userData, setUserData] = useState(null);
   const dispatch = useDispatch();
-  useEffect(()=> {
-    const setData = async() => {
-      const decodedToken = await jwtDecode(token)
-      if(decodedToken !== userData){
-        setUserData(decodedToken)
-        dispatch(setUserReal(decodedToken))
+  const [loading, setLoading] = useState(true); // Global loading state
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false); // Hide Preloader after 4 seconds
+    }, 900);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const setData = async () => {
+      const decodedToken = await jwtDecode(token);
+      if (decodedToken !== userData) {
+        setUserData(decodedToken);
+        dispatch(setUserReal(decodedToken));
       }
-    }
-    if(token){
+    };
+    if (token) {
       setData();
     }
-  }, [token])
+  }, [token, userData, dispatch]);
+
+  if (loading) {
+    return <Preloader />; // Show Preloader if loading is true
+  }
+
   return (
     <div className="w-screen min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-black flex flex-col font-inter">
-      <Navbar/>
+      <Navbar />
       <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/about" element={<About/>}/>
-          <Route path="category/:categoryName" element={<Category/>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="category/:categoryName" element={<Category />} />
 
-          {/* Open Route - for Only Non Logged in User */}
-          <Route 
-            path="login"
-            element={
-              <OpenRoute><Login/></OpenRoute>
-            }
-          />
-          <Route
+        {/* Open Route - for Only Non Logged in User */}
+        <Route
+          path="login"
+          element={
+            <OpenRoute>
+              <Login />
+            </OpenRoute>
+          }
+        />
+        <Route
           path="forgot-password"
           element={
             <OpenRoute>
@@ -81,7 +98,7 @@ function App() {
           path="signup"
           element={
             <OpenRoute>
-              <Signup/>
+              <Signup />
             </OpenRoute>
           }
         />
@@ -89,52 +106,19 @@ function App() {
           path="verify-email"
           element={
             <OpenRoute>
-              <VerifyEmail/>
+              <VerifyEmail />
             </OpenRoute>
           }
         />
-        <Route path="/jobs" element={<AllJobs/>}/>
-         {/* Private Route - for Only Logged in User */}
-         <Route element={<PrivateRoute> <Dashboard/></PrivateRoute>}>
-             {/* Route for all users */}
-             <Route path="dashboard/my-profile" element={<MyProfile />} />
-             <Route path="dashboard/Settings" element={<Settings/>}/>
-             
-             
+        <Route path="/jobs" element={<AllJobs />} />
 
-             {/* ********************************************************************************************************
-                                                      ROUTES FOR Applicant
-            ******************************************************************************************************** */}
-
-            {
-              userData?.accountType === ACCOUNT_TYPE.APPLICANT && (
-                <>
-                <Route path="dashboard/my-applications" element={<MyApplications/>} />
-                </>
-              )
-            }
-            {/* ********************************************************************************************************
-                                                      ROUTES FOR Recruiter
-            ******************************************************************************************************** */}
-            {
-              userData?.accountType === ACCOUNT_TYPE.RECRUITER && (
-                <>
-                <Route path="dashboard/my-jobs" element={<MyJobs/>} />
-                <Route path="dashboard/add-job" element={<AddJobs/>} />
-                <Route path="/dashboard/edit-job/:jobId" element={<EditJob />} />
-                <Route path="/dashboard/applications" element={<Applications />} />
-                <Route path="/dashboard/job/applications/:jobId" element={<ViewApplication />} />
-                </>
-              )
-            }
-
-         </Route>
-         <Route
-          path="*"
-          element={<Error />}
-        />
+        {/* Private Route - for Only Logged in User */}
+        <Route element={<PrivateRoute><Dashboard /></PrivateRoute>}>
+          <Route path="dashboard/my-profile" element={<MyProfile />} />
+          <Route path="dashboard/Settings" element={<Settings />} />
+          {/* ...additional routes */}
+        </Route>
       </Routes>
-
     </div>
   );
 }

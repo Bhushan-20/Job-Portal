@@ -1,13 +1,29 @@
-import React from 'react';
-import jobifyLogo from '../../assets/Logo/Logo_jobify.svg.png'; // Add your logo path here
-import './Preloader.css'; // Create a CSS file for styling
+import { useState, useEffect } from "react";
+import Logo from "../../assets/Logo/Logo_jobify.svg.png";
 
-const Preload = () => {
+const Preloader = () => {
+  const [showLoader, setShowLoader] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoader(false);
+    }, 2000); // Animation duration is 2 seconds
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="preloader">
-      <img src={jobifyLogo} alt="Jobify Logo" />
-    </div>
+    <>
+      {showLoader && (
+        <div className="w-full h-full min-h-screen flex justify-center items-center bg-gradient-to-b from-blue-900 via-blue-800 to-black">
+          <img
+            className="w-[500px] h-[200px] animate-zoom-out-fade mix-blend-lighten"
+            src={Logo}
+            alt="logo"
+          />
+        </div>
+      )}
+    </>
   );
 };
 
-export default Preload;
+export default Preloader;
