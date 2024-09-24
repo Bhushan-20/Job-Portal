@@ -63,22 +63,20 @@ function App() {
 
   return (
     <div className="w-screen min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-black flex flex-col font-inter">
-      <Navbar />
+      <Navbar/>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="category/:categoryName" element={<Category />} />
+          <Route path="/" element={<Home/>}/>
+          <Route path="/about" element={<About/>}/>
+          <Route path="category/:categoryName" element={<Category/>} />
 
-        {/* Open Route - for Only Non Logged in User */}
-        <Route
-          path="login"
-          element={
-            <OpenRoute>
-              <Login />
-            </OpenRoute>
-          }
-        />
-        <Route
+          {/* Open Route - for Only Non Logged in User */}
+          <Route 
+            path="login"
+            element={
+              <OpenRoute><Login/></OpenRoute>
+            }
+          />
+          <Route
           path="forgot-password"
           element={
             <OpenRoute>
@@ -98,7 +96,7 @@ function App() {
           path="signup"
           element={
             <OpenRoute>
-              <Signup />
+              <Signup/>
             </OpenRoute>
           }
         />
@@ -106,21 +104,55 @@ function App() {
           path="verify-email"
           element={
             <OpenRoute>
-              <VerifyEmail />
+              <VerifyEmail/>
             </OpenRoute>
           }
         />
-        <Route path="/jobs" element={<AllJobs />} />
+        <Route path="/jobs" element={<AllJobs/>}/>
+         {/* Private Route - for Only Logged in User */}
+         <Route element={<PrivateRoute> <Dashboard/></PrivateRoute>}>
+             {/* Route for all users */}
+             <Route path="dashboard/my-profile" element={<MyProfile />} />
+             <Route path="dashboard/Settings" element={<Settings/>}/>
+             
+             
 
-        {/* Private Route - for Only Logged in User */}
-        <Route element={<PrivateRoute><Dashboard /></PrivateRoute>}>
-          <Route path="dashboard/my-profile" element={<MyProfile />} />
-          <Route path="dashboard/Settings" element={<Settings />} />
-          {/* ...additional routes */}
-        </Route>
+             {/* ********************************************************************************************************
+                                                      ROUTES FOR Applicant
+            ******************************************************************************************************** */}
+
+            {
+              userData?.accountType === ACCOUNT_TYPE.APPLICANT && (
+                <>
+                <Route path="dashboard/my-applications" element={<MyApplications/>} />
+                </>
+              )
+            }
+            {/* ********************************************************************************************************
+                                                      ROUTES FOR Recruiter
+            ******************************************************************************************************** */}
+            {
+              userData?.accountType === ACCOUNT_TYPE.RECRUITER && (
+                <>
+                <Route path="dashboard/my-jobs" element={<MyJobs/>} />
+                <Route path="dashboard/add-job" element={<AddJobs/>} />
+                <Route path="/dashboard/edit-job/:jobId" element={<EditJob />} />
+                <Route path="/dashboard/applications" element={<Applications />} />
+                <Route path="/dashboard/job/applications/:jobId" element={<ViewApplication />} />
+                </>
+              )
+            }
+
+         </Route>
+         <Route
+          path="*"
+          element={<Error />}
+        />
       </Routes>
+
     </div>
   );
+
 }
 
 export default App;
