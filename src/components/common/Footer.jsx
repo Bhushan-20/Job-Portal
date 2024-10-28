@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/Logo/Logo_jobify.svg.png";
 
 // Icons
-import { FaFacebook, FaGoogle, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaGoogle, FaTwitter, FaYoutube, FaGithub, FaLinkedin } from "react-icons/fa";
 
 const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
 const Resources = [
@@ -46,14 +46,24 @@ const Footer = () => {
                   );
                 })}
               </div>
-              <div className="flex gap-3 text-lg">
-                <FaFacebook />
-                <FaGoogle />
-                <FaTwitter />
-                <FaYoutube />
+              <div className="flex gap-3 text-yellow-400 text-xl">
+                <a href="./" target="_blank" rel="noopener noreferrer">
+                  <FaTwitter className="hover:text-white transition duration-200 cursor-pointer" />
+                </a>
+                <a href="https://github.com/Bhushan-20" target="_blank" rel="noopener noreferrer">
+                  <FaGithub className="hover:text-white transition duration-200 cursor-pointer" />
+                </a>
+                <a href="./" target="_blank" rel="noopener noreferrer">
+                  <FaYoutube className="hover:text-white transition duration-200 cursor-pointer" />
+                </a>
+                <a href="https://www.linkedin.com/in/bhushan-patil-11410a173/" target="_blank" rel="noopener noreferrer">
+                  <FaLinkedin className="hover:text-white transition duration-200 cursor-pointer" />
+                </a>
               </div>
               <div></div>
             </div>
+
+            
 
             <div className="w-[48%] lg:w-[30%] mb-7 lg:pl-0">
               <h1 className="text-richblack-50 font-semibold text-[16px]">
